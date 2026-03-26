@@ -40,7 +40,6 @@
     .sub-tab { padding-bottom: 12px; cursor: pointer; font-weight: 600; color: #666; font-size: 13px; position: relative; display: flex; align-items: center; }
     .sub-tab.active { color: var(--ps-green); border-bottom: 4px solid var(--ps-green); }
 
-    /* Notification Badge */
     .tab-badge { background: var(--ps-red); color: white; border-radius: 10px; padding: 2px 6px; font-size: 9px; margin-left: 6px; font-weight: 700; display: none; }
 
     .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; flex-wrap: wrap; }
@@ -63,23 +62,28 @@
 
     .review-card { background: var(--ps-light-green); border-left: 6pt solid var(--ps-green); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
     .alert-card { background: #fffaf0; border-left: 6pt solid var(--ps-red); padding: 15px; border-radius: 8px; margin-bottom: 10px; }
-
     .group-header { background: var(--ps-green); color: white; padding: 8px 12px; margin: 20px 0 10px 0; font-weight: 700; font-size: 11px; text-transform: uppercase; border-radius: 4px; }
     .section-header { color: var(--ps-dark-green); border-bottom: 2px solid var(--ps-light-green); padding-bottom: 5px; margin: 35px 0 15px 0; font-size: 18px; font-weight: 700; }
 
-    /* Reporting Custom Styles */
-    .reporting-controls { background: white; padding: 20px; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+    /* --- REPORTING STYLES --- */
+    .reporting-controls { background: white; padding: 20px; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
     .reporting-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
-    .report-widget { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 12px; cursor: grab; }
-    .report-widget h4 { margin: 0 0 20px 0; color: var(--ps-dark-gray); font-size: 14px; border-left: 4px solid var(--ps-blue); padding-left: 10px; cursor: move; }
+    .report-widget { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 12px; cursor: grab; }
+    .report-widget h4 { margin: 0 0 25px 0; color: var(--ps-dark-gray); font-size: 14px; border-left: 4px solid var(--ps-blue); padding-left: 10px; cursor: move; }
+
+    .chart-layout { display: flex; gap: 0; height: 400px; width: 100%; position: relative; }
+    .y-axis { width: 45px; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 85px; border-right: 2px solid #ddd; text-align: right; padding-right: 12px; font-size: 10px; color: #888; font-weight: 700; }
+    .chart-scroll-container { flex: 1; overflow-x: auto; display: flex; align-items: flex-end; padding-bottom: 85px; position: relative; gap: 25px; padding-left: 15px; }
     
-    .chart-container { height: 350px; width: 100%; display: flex; align-items: flex-end; gap: 12px; padding: 40px 10px 65px 10px; position: relative; border-bottom: 1px solid #eee; overflow-x: auto; }
-    .bar-wrapper { flex: 1; min-width: 45px; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; }
-    .bar-stack { width: 30px; display: flex; flex-direction: column-reverse; transition: 0.3s; position: relative; z-index: 1; }
-    .bar-segment-deal { background: var(--ps-green); width: 100%; }
-    .bar-segment-proj { background: var(--ps-blue); width: 100%; }
-    .mpc-outline { position: absolute; bottom: 0; width: 36px; border: 2px dashed #999; z-index: 2; pointer-events: none; left: -3px; }
-    .bar-label { position: absolute; bottom: -55px; transform: rotate(-45deg); font-size: 9px; white-space: nowrap; text-align: right; width: 110px; right: -35px; font-weight: 600; }
+    .bar-wrapper { min-width: 65px; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; }
+    .bar-stack { width: 34px; display: flex; flex-direction: column-reverse; transition: 0.3s; position: relative; z-index: 1; }
+    .bar-segment-deal { background: var(--ps-green); width: 100%; border-top: 1px solid rgba(255,255,255,0.3); }
+    .bar-segment-proj { background: var(--ps-blue); width: 100%; border-top: 1px solid rgba(255,255,255,0.3); }
+    .mpc-outline { position: absolute; bottom: 0; width: 42px; border: 2px dashed #888; z-index: 2; pointer-events: none; left: -4px; border-bottom: none; }
+    .bar-label { position: absolute; bottom: -80px; transform: rotate(-45deg); font-size: 9px; white-space: nowrap; text-align: right; width: 130px; right: -45px; font-weight: 700; color: #555; }
+    
+    .grid-lines { position: absolute; top: 0; left: 45px; right: 0; bottom: 85px; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+    .grid-line { width: 100%; border-top: 1px solid rgba(0,0,0,0.05); }
 
     footer { text-align: center; padding: 40px; color: var(--ps-dark-gray); font-size: 10px; font-weight: 600; }
   </style>
@@ -132,11 +136,11 @@
 
   <div class="controls" style="margin-bottom: 25px; border-bottom: 1px solid #ddd; padding-bottom: 15px;">
     <div class="control-group">
-      <span style="font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase;">Regional View:</span>
-      <button class="btn-action filter-tz active" onclick="setTZFilter('all', this)">All Regions</button>
-      <button class="btn-action filter-tz" onclick="setTZFilter('EST', this)">EST</button>
-      <button class="btn-action filter-tz" onclick="setTZFilter('CST', this)">CST</button>
-      <button class="btn-action filter-tz" onclick="setTZFilter('PST', this)">PST</button>
+      <span style="font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase;">Global View:</span>
+      <button class="btn-action filter-tz active" onclick="setGlobalTZ('all', this)">All Regions</button>
+      <button class="btn-action filter-tz" onclick="setGlobalTZ('EST', this)">EST</button>
+      <button class="btn-action filter-tz" onclick="setGlobalTZ('CST', this)">CST</button>
+      <button class="btn-action filter-tz" onclick="setGlobalTZ('PST', this)">PST</button>
     </div>
   </div>
 
@@ -171,41 +175,67 @@
 
   <div id="view-reporting" class="tab-content" style="display:none;">
     <div class="reporting-controls">
-        <div>
-            <h3 style="margin:0 0 10px 0; color:var(--ps-dark-green);">Reporting & Trend Analysis</h3>
-            <div class="control-group">
-                <span style="font-size:10px; font-weight:700; color:#888;">TIME RANGE:</span>
-                <select id="report-range" style="padding:4px; font-size:11px;" onchange="renderReporting()">
-                    <option value="bts">BTS Season (Apr-Sept)</option>
-                    <option value="q1">Q1 (Sept-Nov)</option>
-                    <option value="q2">Q2 (Dec-Feb)</option>
-                    <option value="q3">Q3 (Mar-May)</option>
-                    <option value="q4" selected>Q4 (Jun-Aug)</option>
-                    <option value="year">Full Year</option>
-                </select>
+        <div style="display:flex; justify-content:space-between; width:100%; align-items:flex-end;">
+            <div style="display:flex; gap:30px;">
+                <div>
+                    <span style="font-size:10px; font-weight:700; color:#888;">SEASON / QUARTER:</span><br>
+                    <select id="report-range" style="padding:5px; font-size:11px; margin-top:5px; width:180px;">
+                        <option value="year">Current Year</option>
+                        <option value="bts">BTS (Apr-Sept)</option>
+                        <option value="q4_26" selected>FY26 Q4 (Jun-Aug)</option>
+                        <option value="q3_26">FY26 Q3 (Mar-May)</option>
+                        <option value="q2_26">FY26 Q2 (Dec-Feb)</option>
+                        <option value="q4_25">FY25 Q4 (Jun-Aug)</option>
+                    </select>
+                </div>
+                <div>
+                    <span style="font-size:10px; font-weight:700; color:#888;">CUSTOM RANGE:</span><br>
+                    <div style="margin-top:5px; display:flex; align-items:center; gap:5px;">
+                        <input type="date" class="btn-action" style="padding:3px;"> to <input type="date" class="btn-action" style="padding:3px;">
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <span style="font-size:10px; font-weight:700; color:#888;">POINT TYPES:</span>
-            <label style="font-size:11px;"><input type="checkbox" id="inc-deals" checked onchange="renderReporting()"> Deal Points</label>
-            <label style="font-size:11px; margin-left:10px;"><input type="checkbox" id="inc-projs" checked onchange="renderReporting()"> Project Points</label>
-            <button class="btn-action" style="margin-left:20px; font-size:9px;" onclick="resetLayout()">Reset Layout</button>
+            <div style="text-align:right;">
+                <span style="font-size:10px; font-weight:700; color:#888;">POINT TYPES:</span><br>
+                <div style="margin-top:5px;">
+                    <label style="font-size:11px;"><input type="checkbox" id="inc-deals" checked onchange="renderReporting()"> Deal Pts</label>
+                    <label style="font-size:11px; margin-left:15px;"><input type="checkbox" id="inc-projs" checked onchange="renderReporting()"> Project Pts</label>
+                    <button class="btn-action" style="margin-left:25px; font-size:9px;" onclick="resetLayout()">Reset Layout</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="reporting-grid" id="reporting-grid">
         <div class="report-widget" draggable="true" id="widget-indiv" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)">
-            <h4>Individual Workload Analysis (T1 → T4)</h4>
-            <div class="chart-container" id="chart-indiv"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h4 style="margin:0;">Individual Workload Analysis (T1 → T4)</h4>
+                <select id="report-tz-filter" style="padding:4px; font-size:10px; font-weight:700;" onchange="renderReporting()">
+                    <option value="all">ALL TERRITORIES</option>
+                    <option value="EST">EST ONLY</option>
+                    <option value="CST">CST ONLY</option>
+                    <option value="PST">PST ONLY</option>
+                </select>
+            </div>
+            <div class="chart-layout">
+                <div class="y-axis" id="y-axis-indiv"></div>
+                <div class="grid-lines" id="grid-indiv"></div>
+                <div class="chart-scroll-container" id="chart-indiv"></div>
+            </div>
         </div>
+
         <div class="report-widget" draggable="true" id="widget-terri" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)">
             <h4>Territory Capacity Comparison</h4>
-            <div class="chart-container" id="chart-terri"></div>
+            <div class="chart-layout">
+                <div class="y-axis" id="y-axis-terri"></div>
+                <div class="grid-lines" id="grid-terri"></div>
+                <div class="chart-scroll-container" id="chart-terri"></div>
+            </div>
         </div>
     </div>
   </div>
 
-  <footer>© 2026 ParentSquare • Total Team Workload</footer>
+  <footer>© 2026 ParentSquare • Total Team Workload Dashboard</footer>
 </div>
 
 <script>
@@ -217,7 +247,7 @@ const ADJ_OPTIONS = ["Extended Launch", "Proof of Concept", "Pilots", "DSAs/DUAs
 let currentLayout = 'list', currentSort = 'tier', currentTZ = 'all', sortDir = 'desc', eligSortDir = 'desc';
 
 let teamData = [
-  { name: "Alex Rivers", tz: "EST", tier: "T4", dealPts: 65, projPts: 25, deals: 12, projects: 2, pd: 0, y: 1, r: 0, onRotation: true, reason: "" },
+  { name: "Alex Rivers", tz: "EST", tier: "T4", dealPts: 85, projPts: 25, deals: 12, projects: 2, pd: 0, y: 1, r: 0, onRotation: true, reason: "" },
   { name: "Jordan Miller", tz: "EST", tier: "T3", dealPts: 70, projPts: 15, deals: 11, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
   { name: "Casey Smith", tz: "EST", tier: "T2", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 1, y: 1, r: 0, onRotation: true, reason: "" },
   { name: "Morgan Lane", tz: "CST", tier: "T1", dealPts: 45, projPts: 15, deals: 9, projects: 2, pd: 0, y: 0, r: 1, onRotation: false, reason: "Velocity Limit" },
@@ -233,7 +263,7 @@ let teamData = [
   { name: "Emerson True", tz: "EST", tier: "T3", dealPts: 100, projPts: 10, deals: 14, projects: 1, pd: 0, y: 3, r: 1, onRotation: true, reason: "" },
   { name: "Sutton Wood", tz: "CST", tier: "T2", dealPts: 65, projPts: 15, deals: 9, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
   { name: "Blake Vale", tz: "PST", tier: "T1", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
-  { name: "Parker Jade", tz: "CST", tier: "T3", dealPts: 75, projPts: 20, deals: 10, projects: 2, pd: 0, y: 1, r: 0, onRotation: true, reason: "" },
+  { name: "Parker Jade", tz: "CST", tier: "T3", dealPts: 85, projPts: 20, deals: 10, projects: 2, pd: 0, y: 1, r: 0, onRotation: true, reason: "" },
   { name: "Avery Sky", tz: "PST", tier: "T2", dealPts: 60, projPts: 10, deals: 9, projects: 1, pd: 1, y: 1, r: 0, onRotation: true, reason: "" },
   { name: "Logan Moss", tz: "EST", tier: "T4", dealPts: 80, projPts: 10, deals: 11, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
   { name: "Kendall Bell", tz: "CST", tier: "T1", dealPts: 55, projPts: 5, deals: 8, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
@@ -245,35 +275,56 @@ let teamData = [
 
 let dealQueue = [{ id: 901, name: "Mountain View USD", size: "Large", sis: "Infinite Campus", tz: "PST", adj: [] }];
 
-// Logic Block: Reporting
 function renderReporting() {
     const showDeals = document.getElementById('inc-deals').checked;
     const showProjs = document.getElementById('inc-projs').checked;
-    const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
+    const localTZ = document.getElementById('report-tz-filter').value;
 
-    // 1. Individual Chart
+    const axisValues = [160, 140, 120, 100, 80, 60, 40, 20, 0];
+    const axisHTML = axisValues.map(v => `<span>${v}</span>`).join('');
+    const gridHTML = axisValues.map(() => `<div class="grid-line"></div>`).join('');
+    document.getElementById('y-axis-indiv').innerHTML = axisHTML;
+    document.getElementById('grid-indiv').innerHTML = gridHTML;
+    document.getElementById('y-axis-terri').innerHTML = axisHTML;
+    document.getElementById('grid-terri').innerHTML = gridHTML;
+
+    // 1. Individual Chart (T1 to T4)
     const indBody = document.getElementById('chart-indiv'); indBody.innerHTML = '';
-    const sorted = [...filtered].sort((a,b) => a.tier.localeCompare(b.tier));
+    const filteredIndiv = localTZ === 'all' ? teamData : teamData.filter(i => i.tz === localTZ);
+    const sorted = [...filteredIndiv].sort((a,b) => a.tier.localeCompare(b.tier));
+    
     sorted.forEach(im => {
-        const mpc = MPC_VALUES[im.tier], dP = showDeals ? im.dealPts : 0, pP = showProjs ? im.projPts : 0, scale = 2.4;
+        const mpc = MPC_VALUES[im.tier], dP = showDeals ? im.dealPts : 0, pP = showProjs ? im.projPts : 0, hScale = 1.95;
         const w = document.createElement('div'); w.className = 'bar-wrapper';
-        w.innerHTML = `<div class="bar-stack" style="height:${Math.max(dP+pP, mpc)*scale}px;"><div class="bar-segment-deal" style="height:${dP*scale}px"></div><div class="bar-segment-proj" style="height:${pP*scale}px"></div><div class="mpc-outline" style="height:${mpc*scale}px;"></div></div><div class="bar-label">${im.name} [${im.tier}]</div>`;
+        w.innerHTML = `
+            <div class="bar-stack" style="height:${Math.max(dP+pP, mpc)*hScale}px;">
+                <div class="bar-segment-deal" style="height:${dP*hScale}px"></div>
+                <div class="bar-segment-proj" style="height:${pP*hScale}px"></div>
+                <div class="mpc-outline" style="height:${mpc*hScale}px;"></div>
+            </div>
+            <div class="bar-label">${im.name} (${im.tz}) [${im.tier}]</div>`;
         indBody.appendChild(w);
     });
 
-    // 2. Territory Chart
+    // 2. Territory Comparison
     const terBody = document.getElementById('chart-terri'); terBody.innerHTML = '';
-    ["EST", "CST", "PST"].forEach(reg => {
-        const ims = teamData.filter(i => i.tz === reg);
+    ["EST", "CST", "PST"].forEach(region => {
+        const ims = teamData.filter(i => i.tz === region);
         let rd=0, rp=0, rm=0; ims.forEach(i => { rd+=i.dealPts; rp+=i.projPts; rm+=MPC_VALUES[i.tier]; });
-        const dP = showDeals ? rd : 0, pP = showProjs ? rp : 0, scale = 0.35;
-        const w = document.createElement('div'); w.className = 'bar-wrapper';
-        w.innerHTML = `<div class="bar-stack" style="height:${Math.max(dP+pP, rm)*scale}px; width:60px;"><div class="bar-segment-deal" style="height:${dP*scale}px"></div><div class="bar-segment-proj" style="height:${pP*scale}px"></div><div class="mpc-outline" style="height:${rm*scale}px; width:66px;"></div></div><div class="bar-label" style="bottom:-30px; transform:none; right:auto; width:auto; font-size:12px;">${reg} Region</div>`;
+        const avgD = rd/ims.length, avgP = rp/ims.length, avgM = rm/ims.length, hScale = 1.95;
+        const w = document.createElement('div'); w.className = 'bar-wrapper'; w.style.minWidth = "150px";
+        w.innerHTML = `
+            <div class="bar-stack" style="height:${Math.max(avgD+avgP, avgM)*hScale}px; width:60px;">
+                <div class="bar-segment-deal" style="height:${avgD*hScale}px"></div>
+                <div class="bar-segment-proj" style="height:${avgP*hScale}px"></div>
+                <div class="mpc-outline" style="height:${avgM*hScale}px; width:66px; left:-3px;"></div>
+            </div>
+            <div class="bar-label" style="bottom:-30px; transform:none; right:auto; width:auto; font-size:12px;">${region} Region (Avg)</div>`;
         terBody.appendChild(w);
     });
 }
 
-// Logic Block: Draggable Layout
+// Drag & App Core (LOCKED)
 function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
 function allowDrop(ev) { ev.preventDefault(); }
 function drop(ev) {
@@ -283,18 +334,15 @@ function drop(ev) {
     if (target && target.id !== data) {
         const grid = document.getElementById('reporting-grid');
         grid.insertBefore(document.getElementById(data), target);
-        saveLayout();
+        localStorage.setItem('rep_layout', JSON.stringify(Array.from(document.querySelectorAll('.report-widget')).map(w => w.id)));
     }
 }
-function saveLayout() { const order = Array.from(document.querySelectorAll('.report-widget')).map(w => w.id); localStorage.setItem('rep_layout', JSON.stringify(order)); }
-function loadLayout() { 
+function resetLayout() { localStorage.removeItem('rep_layout'); location.reload(); }
+function initApp() { 
+    updateMetrics(); renderContent(); 
     const order = JSON.parse(localStorage.getItem('rep_layout'));
     if (order) order.forEach(id => document.getElementById('reporting-grid').appendChild(document.getElementById(id)));
 }
-function resetLayout() { localStorage.removeItem('rep_layout'); location.reload(); }
-
-// App Core
-function initApp() { updateMetrics(); renderContent(); loadLayout(); }
 function switchSubTab(tab) {
     document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
     document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
@@ -302,21 +350,23 @@ function switchSubTab(tab) {
     document.getElementById('tab-' + tab).classList.add('active');
     if (tab === 'reporting') renderReporting();
 }
-function setTZFilter(tz, btn) {
+function setGlobalTZ(tz, btn) {
     currentTZ = tz; document.querySelectorAll('.filter-tz').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active'); updateMetrics(); renderContent(); if(document.getElementById('view-reporting').style.display === 'block') renderReporting();
+    btn.classList.add('active'); updateMetrics(); renderContent();
+    if(document.getElementById('view-reporting').style.display === 'block') renderReporting();
 }
+
 function triggerManualRemoval() {
     const name = document.getElementById('manual-im-select').value;
-    const reason = prompt(`Removal reason for ${name}:`);
+    const reason = prompt(`Reason for removing ${name}:`);
     if (reason) { const im = teamData.find(i => i.name === name); im.onRotation = false; im.reason = reason; updateBadge(); renderContent(); }
 }
 function resumeIM(name) { const im = teamData.find(i => i.name === name); im.onRotation = true; im.reason = ""; updateBadge(); renderContent(); }
 function toggleEligSort() { eligSortDir = eligSortDir === 'desc' ? 'asc' : 'desc'; renderAssignment(); }
 function updateBadge() {
-    const alerts = teamData.filter(im => !im.onRotation).length;
-    const badge = document.getElementById('assignment-badge'); badge.innerText = dealQueue.length + alerts;
-    badge.style.display = (dealQueue.length + alerts) > 0 ? 'inline-block' : 'none';
+    const total = dealQueue.length + teamData.filter(i => !i.onRotation).length;
+    const badge = document.getElementById('assignment-badge'); badge.innerText = total;
+    badge.style.display = total > 0 ? 'inline-block' : 'none';
 }
 function updateQAdj(id, opt) { const d = dealQueue.find(x => x.id === id); const i = d.adj.indexOf(opt); i > -1 ? d.adj.splice(i,1) : d.adj.push(opt); renderAssignment(); }
 
@@ -330,19 +380,19 @@ function renderRoster() {
     });
     let groups = {};
     sorted.forEach(im => {
-        const pct = Math.round(((im.dealPts + im.projPts) / MPC_VALUES[im.tier]) * 100);
-        const key = currentSort === 'tier' ? `Tier ${im.tier.slice(1)}` : (pct >= 90 ? "Critical (90%+)" : (pct >= 80 ? "High (80-89%)" : "Stable (Under 80%)"));
+        const pct = Math.round(((im.dealPts+im.projPts)/MPC_VALUES[im.tier])*100);
+        const key = currentSort === 'tier' ? `Tier ${im.tier.slice(1)}` : (pct>=90?"Critical":pct>=80?"High":"Stable");
         if (!groups[key]) groups[key] = []; groups[key].push(im);
     });
 
     Object.keys(groups).forEach(key => {
         const h = document.createElement('div'); h.className = 'group-header'; h.innerText = key; display.appendChild(h);
         if (currentLayout === 'list') {
-            const t = document.createElement('table'); t.innerHTML = `<thead><tr><th>TZ</th><th>Name</th><th>Deals (Pts)</th><th>Projs (Pts)</th><th>% Cap</th><th>Risks (Y/R|P)</th></tr></thead><tbody></tbody>`;
+            const t = document.createElement('table'); t.innerHTML = `<thead><tr><th>TZ</th><th>Name</th><th>Deals (Pts)</th><th>Projs (Pts)</th><th>% Cap</th><th>Risks</th></tr></thead><tbody></tbody>`;
             const b = t.querySelector('tbody'); display.appendChild(t);
             groups[key].forEach(im => {
                 const pct = Math.round(((im.dealPts+im.projPts)/MPC_VALUES[im.tier])*100), c = pct >= 90 ? 'var(--ps-red)' : 'var(--ps-dark-gray)';
-                b.innerHTML += `<tr><td><b>${im.tz}</b></td><td><b>${im.name}</b></td><td>${im.deals} (${im.dealPts})</td><td style="color:${c}; font-weight:700;">${pct}%</td><td>${im.y}Y/${im.r}R|<b style="${im.pd>0?'color:var(--ps-red)':''}">${im.pd}P</b></td></tr>`;
+                b.innerHTML += `<tr><td><b>${im.tz}</b></td><td><b>${im.name}</b></td><td>${im.deals} (${im.dealPts})</td><td>${im.projects || 0}</td><td style="color:${c}; font-weight:700;">${pct}%</td><td>${im.y}Y/${im.r}R|<b style="${im.pd>0?'color:var(--ps-red)':''}">${im.pd}P</b></td></tr>`;
             });
         } else {
             const grid = document.createElement('div'); grid.className = 'im-grid'; display.appendChild(grid);
@@ -371,17 +421,17 @@ function updateMetrics() {
     const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
     filtered.forEach(im => { tdP+=im.dealPts; tpP+=im.projPts; tM+=MPC_VALUES[im.tier]; spC+=im.projects; pdC+=im.pd; yR+=im.y; rR+=im.r; dC+=im.deals; });
     const tot = tdP + tpP, cap = Math.round((tot/tM)*100);
-    document.getElementById('t-im-count').innerText = filtered.length; document.getElementById('t-deal-count').innerText = dC; document.getElementById('t-strat-proj').innerText = spC;
-    document.getElementById('t-total-pts').innerText = tot; document.getElementById('t-max-pts').innerText = tM; document.getElementById('t-deal-pts').innerText = tdP;
+    document.getElementById('t-im-count').innerText = filtered.length; document.getElementById('t-deal-count').innerText = dC;
+    document.getElementById('t-strat-proj').innerText = spC; document.getElementById('t-total-pts').innerText = tot;
+    document.getElementById('t-max-pts').innerText = tM; document.getElementById('t-deal-pts').innerText = tdP;
     document.getElementById('t-proj-pts').innerText = tpP; document.getElementById('t-cap-pct').innerText = cap + '%';
     document.getElementById('t-fill-deals').style.width = (tdP/tM*100)+'%'; document.getElementById('t-fill-projects').style.width = (tpP/tM*100)+'%';
     document.getElementById('t-risk-total').innerText = `${yR+rR} At-Risk`; document.getElementById('t-risk-breakdown').innerText = `${yR}Y / ${rR}R`;
     document.getElementById('t-past-due-proj').innerText = `${pdC} Past Due Projects`;
 }
 
-function renderContent() { renderRoster(); renderAssignment(); updateBadge(); }
-function setSort(t) { if (currentSort === t) sortDir = sortDir === 'desc' ? 'asc' : 'desc'; else { currentSort = t; sortDir = 'desc'; } document.querySelectorAll('.btn-sort').forEach(b => b.classList.remove('active-sort')); document.getElementById('sort-'+t).classList.add('active-sort'); renderContent(); }
-function switchLayout(l) { currentLayout = l; document.getElementById('btn-list').classList.toggle('active', l==='list'); document.getElementById('btn-card').classList.toggle('active', l==='card'); renderContent(); }
+function setSort(t) { if (currentSort === t) sortDir = sortDir === 'desc' ? 'asc' : 'desc'; else { currentSort = t; sortDir = 'desc'; } document.querySelectorAll('.btn-sort').forEach(b => b.classList.remove('active-sort')); document.getElementById('sort-'+t).classList.add('active-sort'); renderRoster(); }
+function switchLayout(l) { currentLayout = l; document.getElementById('btn-list').classList.toggle('active', l==='list'); document.getElementById('btn-card').classList.toggle('active', l==='card'); renderRoster(); }
 </script>
 </body>
 </html>
