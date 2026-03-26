@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ParentSquare - Total Team Workload</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ps-green: #85ad33;
+      --ps-dark-green: #618025;
+      --ps-blue: #7bbaf0;
+      --ps-gold: #f2b001;
+      --ps-light-green: #e5f1d4;
+      --ps-light-gray: #f7f8f8;
+      --ps-dark-gray: #444444;
+      --ps-red: #d9534f;
+      --ps-light-red: #f2dede;
+    }
+
+    * { box-sizing: border-box; font-family: "Montserrat", Arial, sans-serif; }
+    body { margin: 0; background: var(--ps-light-gray); color: var(--ps-dark-gray); }
+    .container { max-width: 1450px; margin: 0 auto; padding: 24px; }
+
+    header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; }
+    .logo img { height: 40px; width: auto; } 
+    .header-text h1 { color: var(--ps-green); margin: 0; font-size: 24px; font-weight: 700; line-height: 1.2; }
+
+    /* Summary Area */
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--ps-green); min-height: 130px; display: flex; flex-direction: column; justify-content: center; }
+    .card .main-val { font-size: 22px; font-weight: 700; color: var(--ps-dark-green); }
+    .card .sub-val { font-size: 13px; font-weight: 600; color: #777; margin-top: 4px; }
+    .card .label { font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700; margin-top: 8px; }
+
+    .summary-cap-bar { height: 8px; background: #eee; border-radius: 4px; margin-top: 10px; overflow: hidden; display: flex; }
+    .cap-fill-deals { height: 100%; background: var(--ps-green); transition: width 0.5s; }
+    .cap-fill-projects { height: 100%; background: var(--ps-blue); transition: width 0.5s; }
+
+    /* Sub-Tabs */
+    .sub-tabs { display: flex; gap: 24px; border-bottom: 2px solid #ddd; margin-bottom: 24px; }
+    .sub-tab { padding-bottom: 12px; cursor: pointer; font-weight: 600; color: #666; font-size: 13px; position: relative; display: flex; align-items: center; }
+    .sub-tab.active { color: var(--ps-green); border-bottom: 4px solid var(--ps-green); }
+    .tab-badge { background: var(--ps-red); color: white; border-radius: 10px; padding: 2px 6px; font-size: 9px; margin-left: 6px; font-weight: 700; display: none; }
+
+    /* Controls */
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; flex-wrap: wrap; }
+    .control-group { display: flex; align-items: center; gap: 8px; }
+    .btn-action { background: white; border: 1px solid #ddd; padding: 6px 12px; cursor: pointer; font-size: 11px; font-weight: 600; border-radius: 4px; transition: 0.2s; }
+    .btn-action.active { background: var(--ps-green) !important; color: white !important; border-color: var(--ps-green) !important; }
+    .btn-sort.active-sort { background: var(--ps-blue); color: white; border-color: var(--ps-blue); }
+
+    /* Roster/Table Aesthetics (LOCKED) */
+    table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #eee; font-size: 12px; margin-bottom: 10px; }
+    th { background: #f9f9f9; color: var(--ps-dark-gray); padding: 10px; text-align: left; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #ddd; }
+    td { padding: 10px; border-bottom: 1px solid #eee; vertical-align: middle; }
+    tbody tr:nth-child(even) { background-color: #fafafa; }
+    .group-header { background: var(--ps-green); color: white; padding: 8px 12px; margin: 20px 0 10px 0; font-weight: 700; font-size: 11px; text-transform: uppercase; border-radius: 4px; }
+
+    /* Card Aesthetics (LOCKED) */
+    .im-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .im-card { background: white; padding: 15px; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-top: 3px solid var(--ps-green); height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
+    .im-card h3 { margin: 0; font-size: 13px; color: var(--ps-dark-green); }
+    .im-card .sub-info { font-size: 9px; color: #888; font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+    .im-card .stats { font-size: 10.5px; color: #666; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Reporting Widgets */
+    .reporting-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    .report-widget { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; cursor: move; }
+    .report-widget h4 { margin: 0 0 20px 0; color: var(--ps-dark-gray); font-size: 14px; border-left: 4px solid var(--ps-blue); padding-left: 10px; }
+
+    /* Bar Chart Engine */
+    .chart-container { height: 350px; width: 100%; display: flex; align-items: flex-end; gap: 15px; padding: 40px 10px 60px 10px; position: relative; border-bottom: 1px solid #ddd; }
+    .bar-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; }
+    .bar-stack { width: 40px; display: flex; flex-direction: column-reverse; transition: 0.3s; position: relative; z-index: 1; }
+    .bar-segment-deal { background: var(--ps-green); width: 100%; }
+    .bar-segment-proj { background: var(--ps-blue); width: 100%; }
+    .mpc-outline { position: absolute; bottom: 0; width: 46px; border: 2px dashed #999; z-index: 2; pointer-events: none; box-sizing: border-box; }
+    .bar-label { position: absolute; bottom: -50px; transform: rotate(-45deg); font-size: 9px; white-space: nowrap; text-align: right; width: 100px; right: -30px; font-weight: 600; }
+    .y-axis-label { position: absolute; left: -10px; font-size: 9px; color: #999; font-weight: 700; }
+
+    /* Strategy Section (LOCKED) */
+    .review-card { background: var(--ps-light-green); border-left: 6pt solid var(--ps-green); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    .alert-card { background: #fffaf0; border-left: 6pt solid var(--ps-red); padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+    .section-header { color: var(--ps-dark-green); border-bottom: 2px solid var(--ps-light-green); padding-bottom: 5px; margin: 35px 0 15px 0; font-size: 18px; font-weight: 700; }
+
+    footer { text-align: center; padding: 40px; color: var(--ps-dark-gray); font-size: 10px; font-weight: 600; }
+  </style>
+</head>
+<body onload="initDashboard()">
+
+<div class="container">
+  <header>
+    <div class="logo"><img src="logo.png" alt="ParentSquare"></div>
+    <div class="header-text">
+      <h1>Total Team Workload</h1>
+    </div>
+  </header>
+
+  <div class="summary">
+    <div class="card">
+        <div class="main-val"><span id="t-im-count">0</span> Total IMs</div>
+        <div class="sub-val"><span id="t-deal-count">0</span> Implementation Deals</div>
+        <div class="sub-val" style="margin-top:0;"><span id="t-strat-proj">0</span> Strategic Projects</div>
+    </div>
+    <div class="card">
+        <div class="main-val"><span id="t-total-pts">0</span> / <span id="t-max-pts">0</span> Total Points</div>
+        <div class="sub-val"><span id="t-deal-pts">0</span> Deal Points</div>
+        <div class="sub-val" style="margin-top:0;"><span id="t-proj-pts">0</span> Project Points</div>
+    </div>
+    <div class="card">
+        <div id="t-cap-pct" class="main-val">0%</div>
+        <div class="summary-cap-bar">
+            <div id="t-fill-deals" class="cap-fill-deals"></div>
+            <div id="t-fill-projects" class="cap-fill-projects"></div>
+        </div>
+        <div class="label">Total Team Capacity</div>
+    </div>
+    <div class="card">
+        <div style="background-color: var(--ps-light-red); padding: 4px 8px; border-radius: 4px; display: inline-block; width: fit-content;">
+            <div id="t-risk-total" class="main-val" style="font-size: 18px;">0 At-Risk Deals</div>
+        </div>
+        <div id="t-risk-breakdown" class="sub-val" style="border-top: none; color: var(--ps-dark-gray);">0Y / 0R Health Breakdown</div>
+        <div id="t-past-due-proj" class="sub-val">0 Past Due Projects</div>
+    </div>
+  </div>
+
+  <div class="sub-tabs">
+    <div id="tab-roster" class="sub-tab active" onclick="switchSubTab('roster')">Full Team Roster</div>
+    <div id="tab-assignment" class="sub-tab" onclick="switchSubTab('assignment')">
+        Deal Assignment Review <span id="assignment-badge" class="tab-badge">0</span>
+    </div>
+    <div id="tab-reporting" class="sub-tab" onclick="switchSubTab('reporting')">Reporting</div>
+  </div>
+
+  <div class="controls" style="margin-bottom: 25px; border-bottom: 1px solid #ddd; padding-bottom: 15px;">
+    <div class="control-group">
+      <span style="font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase;">Regional View:</span>
+      <button class="btn-action filter-tz active" onclick="setTZFilter('all', this)">All Regions</button>
+      <button class="btn-action filter-tz" onclick="setTZFilter('EST', this)">EST</button>
+      <button class="btn-action filter-tz" onclick="setTZFilter('CST', this)">CST</button>
+      <button class="btn-action filter-tz" onclick="setTZFilter('PST', this)">PST</button>
+    </div>
+  </div>
+
+  <div id="view-roster" class="tab-content">
+    <div class="controls">
+      <div class="control-group">
+        <button id="btn-list" class="btn-action active" onclick="switchLayout('list')">List View</button>
+        <button id="btn-card" class="btn-action" onclick="switchLayout('card')">Card View</button>
+      </div>
+      <div class="control-group">
+        <button id="sort-tier" class="btn-action btn-sort active-sort" onclick="setSort('tier')">Tier ↑↓</button>
+        <button id="sort-cap" class="btn-action btn-sort" onclick="setSort('cap')">% Cap ↑↓</button>
+      </div>
+    </div>
+    <div id="team-display"></div>
+  </div>
+
+  <div id="view-assignment" class="tab-content" style="display:none;">
+    <div class="section-header">New Deal Queue</div>
+    <div id="deal-queue-container"></div>
+    <div class="section-header">Rotation Removal Alerts</div>
+    <div id="alerts-container"></div>
+    <div class="section-header">Manual Rotation Removal</div>
+    <div style="background:white; padding:20px; border-radius:8px; border:1px solid #ddd; display:flex; gap:15px; align-items:center; margin-bottom: 30px;">
+        <label style="font-size:12px; font-weight:700;">Select IM:</label>
+        <select id="manual-im-select" style="padding:6px; font-size:12px; width: 250px;"></select>
+        <button class="btn-action active" onclick="triggerManualRemoval()">Remove from Rotation</button>
+    </div>
+    <div class="section-header">IM Account Eligibility</div>
+    <div id="eligibility-container"></div>
+  </div>
+
+  <div id="view-reporting" class="tab-content" style="display:none;">
+    <div style="background:white; padding:20px; border-radius:8px; margin-bottom:24px; box-shadow:0 2px 6px rgba(0,0,0,0.05);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
+            <div>
+                <h3 style="margin:0 0 10px 0; color:var(--ps-dark-green);">Reporting & Trend Analysis</h3>
+                <div class="control-group">
+                    <span style="font-size:10px; font-weight:700; color:#888;">TIME RANGE:</span>
+                    <select style="padding:4px; font-size:11px;">
+                        <option>Full Year</option>
+                        <option>BTS Season (Apr-Sept)</option>
+                        <option>Q1 (Sept-Nov)</option>
+                        <option>Q2 (Dec-Feb)</option>
+                        <option>Q3 (Mar-May)</option>
+                        <option selected>Q4 (Jun-Aug)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <span style="font-size:10px; font-weight:700; color:#888;">POINT TYPES:</span>
+                <label style="font-size:11px;"><input type="checkbox" id="check-deal" checked onchange="renderReports()"> Deal Points</label>
+                <label style="font-size:11px; margin-left:10px;"><input type="checkbox" id="check-proj" checked onchange="renderReports()"> Project Points</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="reporting-grid" id="report-grid">
+        <div class="report-widget" draggable="true" id="rep-individual">
+            <h4>Individual Workload vs. MPC (T1 → T4)</h4>
+            <div class="chart-container" id="individual-chart-body"></div>
+        </div>
+
+        <div class="report-widget" draggable="true" id="rep-territory">
+            <h4>Territory Capacity Comparison</h4>
+            <div class="chart-container" id="territory-chart-body"></div>
+        </div>
+    </div>
+  </div>
+
+  <footer>© 2026 ParentSquare • Total Team Workload Dashboard</footer>
+</div>
+
+<script>
+const MPC_VALUES = { "T1": 70, "T2": 90, "T3": 120, "T4": 120, "T5": 90 };
+const SIZE_PTS = { "Strategic": 4, "Large": 2, "Medium": 3, "Small": 1 };
+const SIS_PTS = { "PowerSchool": 3, "Infinite Campus": 2, "Aeries": 2, "Skyward SFTP": 2, "Clever": 2, "RenWeb/FACTS": 1 };
+const ADJ_OPTIONS = ["Extended Launch", "Proof of Concept", "Pilots", "DSAs/DUAs/DPAs", "DOEs", "New Hire"];
+
+let currentLayout = 'list', currentSort = 'tier', currentTZ = 'all', sortDir = 'desc';
+
+// Calibrated Roster (24 Named IMs >= 50%)
+let teamData = [
+  { name: "Alex Rivers", tz: "EST", tier: "T4", dealPts: 85, projPts: 20, deals: 12, projects: 2, pd: 0, y: 1, r: 0, onRotation: true, reason: "" },
+  { name: "Jordan Miller", tz: "EST", tier: "T3", dealPts: 70, projPts: 10, deals: 11, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
+  { name: "Casey Smith", tz: "EST", tier: "T2", dealPts: 55, projPts: 15, deals: 8, projects: 2, pd: 1, y: 1, r: 0, onRotation: true, reason: "" },
+  { name: "Morgan Lane", tz: "CST", tier: "T1", dealPts: 45, projPts: 10, deals: 9, projects: 2, pd: 0, y: 0, r: 1, onRotation: false, reason: "Velocity Limit" },
+  { name: "Riley West", tz: "CST", tier: "T4", dealPts: 95, projPts: 35, deals: 15, projects: 3, pd: 0, y: 2, r: 1, onRotation: true, reason: "" },
+  { name: "Taylor Brooks", tz: "PST", tier: "T3", dealPts: 85, projPts: 10, deals: 12, projects: 1, pd: 1, y: 1, r: 0, onRotation: true, reason: "" },
+  { name: "Quinn Jones", tz: "PST", tier: "T2", dealPts: 50, projPts: 20, deals: 7, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
+  { name: "Skyler Page", tz: "EST", tier: "T5", dealPts: 65, projPts: 10, deals: 8, projects: 2, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
+  { name: "Dakota Hayes", tz: "CST", tier: "T4", dealPts: 125, projPts: 10, deals: 16, projects: 1, pd: 1, y: 1, r: 2, onRotation: false, reason: "Capacity Overload" },
+  { name: "Jamie Frost", tz: "PST", tier: "T3", dealPts: 65, projPts: 20, deals: 10, projects: 2, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
+  { name: "Peyton Gray", tz: "EST", tier: "T2", dealPts: 60, projPts: 5, deals: 9, projects: 0, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
+  { name: "Reese Dale", tz: "CST", tier: "T1", dealPts: 45, projPts: 15, deals: 8, projects: 3, pd: 1, y: 1, r: 0, onRotation: true, reason: "" },
+  { name: "Charlie King", tz: "PST", tier: "T4", dealPts: 85, projPts: 40, deals: 13, projects: 4, pd: 2, y: 2, r: 0, onRotation: false, reason: "High Velocity" },
+  { name: "Emerson True", tz: "EST", tier: "T3", dealPts: 100, projPts: 10, deals: 14, projects: 1, pd: 0, y: 3, r: 1, onRotation: true, reason: "" },
+  { name: "Sutton Wood", tz: "CST", tier: "T2", dealPts: 65, projPts: 15, deals: 9, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
+  { name: "Blake Vale", tz: "PST", tier: "T1", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
+  { name: "Parker Jade", tz: "CST", tier: "T3", dealPts: 85, projPts: 15, deals: 10, projects: 2, pd: 0, y: 1, r: 0, onRotation: true, reason: "" },
+  { name: "Avery Sky", tz: "PST", tier: "T2", dealPts: 60, projPts: 10, deals: 9, projects: 1, pd: 1, y: 1, r: 0, onRotation: true, reason: "" },
+  { name: "Logan Moss", tz: "EST", tier: "T4", dealPts: 80, projPts: 10, deals: 11, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
+  { name: "Kendall Bell", tz: "CST", tier: "T5", dealPts: 55, projPts: 20, deals: 8, projects: 4, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
+  { name: "Robin Kite", tz: "PST", tier: "T1", dealPts: 50, projPts: 5, deals: 9, projects: 1, pd: 0, y: 1, r: 0, onRotation: true, reason: "" },
+  { name: "Stevie Lynn", tz: "EST", tier: "T2", dealPts: 65, projPts: 12, deals: 10, projects: 3, pd: 1, y: 1, r: 1, onRotation: true, reason: "" },
+  { name: "River Pond", tz: "CST", tier: "T3", dealPts: 95, projPts: 15, deals: 12, projects: 2, pd: 2, y: 2, r: 1, onRotation: true, reason: "" },
+  { name: "Phoenix Day", tz: "PST", tier: "T4", dealPts: 90, projPts: 15, deals: 11, projects: 2, pd: 1, y: 1, r: 0, onRotation: true, reason: "" }
+];
+
+let dealQueue = [{ id: 101, name: "Mountain View USD", size: "Large", sis: "Infinite Campus", tz: "PST", adj: [] }];
+
+// Dashboard Init
+function initDashboard() { updateMetrics(); renderContent(); renderReports(); }
+
+function switchSubTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('view-' + tab).style.display = 'block';
+    document.getElementById('tab-' + tab).classList.add('active');
+    if(tab === 'reporting') renderReports();
+}
+
+function setTZFilter(tz, btn) {
+    currentTZ = tz;
+    document.querySelectorAll('.filter-tz').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    updateMetrics(); renderContent(); renderReports();
+}
+
+// Reporting Chart Logic
+function renderReports() {
+    const showDeals = document.getElementById('check-deal').checked;
+    const showProjs = document.getElementById('check-proj').checked;
+    const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
+
+    // 1. Individual Chart
+    const individualBody = document.getElementById('individual-chart-body');
+    individualBody.innerHTML = '';
+    
+    // Sort T1 to T4
+    const sortedIMs = [...filtered].sort((a,b) => a.tier.localeCompare(b.tier));
+
+    sortedIMs.forEach(im => {
+        const mpc = MPC_VALUES[im.tier];
+        const dPts = showDeals ? im.dealPts : 0;
+        const pPts = showProjs ? im.projPts : 0;
+        const scale = 2.5; // Visual scaling factor
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'bar-wrapper';
+        wrapper.innerHTML = `
+            <div class="bar-stack" style="height:${Math.max(dPts + pPts, mpc) * scale}px; width:30px;">
+                <div class="bar-segment-deal" style="height:${dPts * scale}px"></div>
+                <div class="bar-segment-proj" style="height:${pPts * scale}px"></div>
+                <div class="mpc-outline" style="height:${mpc * scale}px; width:34px; left:-2px;"></div>
+            </div>
+            <div class="bar-label">${im.name} [${im.tier}]</div>
+        `;
+        individualBody.appendChild(wrapper);
+    });
+
+    // 2. Territory Comparison Chart
+    const territoryBody = document.getElementById('territory-chart-body');
+    territoryBody.innerHTML = '';
+    const regions = ["EST", "CST", "PST"];
+
+    regions.forEach(region => {
+        const ims = teamData.filter(i => i.tz === region);
+        let regDeal = 0, regProj = 0, regMPC = 0;
+        ims.forEach(i => {
+            regDeal += i.dealPts; regProj += i.projPts; regMPC += MPC_VALUES[i.tier];
+        });
+
+        const dPts = showDeals ? regDeal : 0;
+        const pPts = showProjs ? regProj : 0;
+        const scale = 0.4; // Scaled for regional totals
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'bar-wrapper';
+        wrapper.innerHTML = `
+            <div class="bar-stack" style="height:${Math.max(dPts + pPts, regMPC) * scale}px; width:60px;">
+                <div class="bar-segment-deal" style="height:${dPts * scale}px"></div>
+                <div class="bar-segment-proj" style="height:${pPts * scale}px"></div>
+                <div class="mpc-outline" style="height:${regMPC * scale}px; width:66px; left:-3px;"></div>
+            </div>
+            <div class="bar-label" style="bottom:-30px; transform:none; right:auto; width:auto; font-size:12px;">${region} Region</div>
+        `;
+        territoryBody.appendChild(wrapper);
+    });
+}
+
+// Roster & Assignment Renderers (LOCKED)
+function renderRoster() {
+    const display = document.getElementById('team-display'); display.innerHTML = '';
+    const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
+    const sorted = [...filtered].sort((a,b) => {
+        let vA = currentSort === 'tier' ? parseInt(a.tier.slice(1)) : (a.dealPts + a.projPts)/MPC_VALUES[a.tier];
+        let vB = currentSort === 'tier' ? parseInt(b.tier.slice(1)) : (b.dealPts + b.projPts)/MPC_VALUES[b.tier];
+        return sortDir === 'desc' ? vB - vA : vA - vB;
+    });
+    let groups = {};
+    sorted.forEach(im => {
+        const pct = Math.round(((im.dealPts + im.projPts) / MPC_VALUES[im.tier]) * 100);
+        const key = currentSort === 'tier' ? `Tier ${im.tier.slice(1)}` : (pct >= 90 ? "Critical" : (pct >= 80 ? "High" : "Stable"));
+        if (!groups[key]) groups[key] = []; groups[key].push(im);
+    });
+    Object.keys(groups).forEach(key => {
+        const h = document.createElement('div'); h.className = 'group-header'; h.innerText = key; display.appendChild(h);
+        if (currentLayout === 'list') {
+            const t = document.createElement('table');
+            t.innerHTML = `<thead><tr><th>TZ</th><th>Name</th><th>Deals (Pts)</th><th>% Cap</th><th>Risks</th></tr></thead><tbody></tbody>`;
+            const b = t.querySelector('tbody'); display.appendChild(t);
+            groups[key].forEach(im => {
+                const pct = Math.round(((im.dealPts+im.projPts)/MPC_VALUES[im.tier])*100), c = pct >= 90 ? 'var(--ps-red)' : 'var(--ps-dark-gray)';
+                b.innerHTML += `<tr><td><b>${im.tz}</b></td><td><b>${im.name}</b></td><td>${im.deals} (${im.dealPts})</td><td style="color:${c}; font-weight:700;">${pct}%</td><td>${im.y}Y/${im.r}R|${im.pd}P</td></tr>`;
+            });
+        } else {
+            const grid = document.createElement('div'); grid.className = 'im-grid'; display.appendChild(grid);
+            groups[key].forEach(im => {
+                const m = MPC_VALUES[im.tier], pct = Math.round(((im.dealPts+im.projPts)/m)*100), c = pct >= 90 ? 'var(--ps-red)' : (pct >= 80 ? 'var(--ps-gold)' : 'var(--ps-green)');
+                grid.innerHTML += `<div class="im-card" style="border-top-color:${c}">
+                    <div><h3>${im.name}</h3><span class="sub-info">${im.tz} • Tier ${im.tier.slice(1)}</span></div>
+                    <div class="stats">Pts: <b>${im.dealPts+im.projPts}</b>/${m} | Projects past due: <b style="${im.pd > 0 ? 'color:var(--ps-red);' : ''}">${im.pd}</b></div>
+                    <div class="summary-cap-bar"><div style="width:${(im.dealPts/m)*100}%; background:var(--ps-green);"></div><div style="width:${(im.projPts/m)*100}%; background:var(--ps-blue);"></div></div>
+                </div>`;
+            });
+        }
+    });
+}
+
+function renderAssignment() {
+    const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
+    const qContainer = document.getElementById('deal-queue-container');
+    qContainer.innerHTML = dealQueue.map(deal => `<div class="review-card"><h4>${deal.name} (${deal.tz})</h4><p>Base: ${deal.size} [${SIZE_PTS[deal.size] + SIS_PTS[deal.sis]}]</p><select style="font-size:11px; padding:4px;">${filtered.map(im => `<option>${im.name}</option>`).join('')}</select><button class="btn-action active">Assign</button></div>`).join('');
+    
+    const aContainer = document.getElementById('alerts-container');
+    aContainer.innerHTML = filtered.filter(im => !im.onRotation).map(im => `<div class="alert-card"><b>${im.name}</b> - ${im.reason} <button class="btn-action" onclick="resumeIM('${im.name}')">Resume</button></div>`).join('');
+    
+    const eContainer = document.getElementById('eligibility-container');
+    eContainer.innerHTML = `<table><thead><tr><th>Name</th><th>Med</th><th>Lg/Ent</th></tr></thead><tbody>${filtered.map(im => `<tr><td><b>${im.name}</b></td><td><input type="checkbox" ${im.med?'checked':''}></td><td><input type="checkbox" ${im.lg?'checked':''}></td></tr>`).join('')}</tbody></table>`;
+}
+
+function updateMetrics() {
+    let tdP=0, tpP=0, tM=0, spC=0, pdC=0, yR=0, rR=0, dC=0;
+    const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
+    filtered.forEach(im => { tdP+=im.dealPts; tpP+=im.projPts; tM+=MPC_VALUES[im.tier]; spC+=im.projects; pdC+=im.pd; yR+=im.y; rR+=im.r; dC+=im.deals; });
+    const tot = tdP + tpP, cap = Math.round((tot/tM)*100);
+    document.getElementById('t-im-count').innerText = filtered.length;
+    document.getElementById('t-deal-count').innerText = dC;
+    document.getElementById('t-strat-proj').innerText = spC;
+    document.getElementById('t-total-pts').innerText = tot;
+    document.getElementById('t-max-pts').innerText = tM;
+    document.getElementById('t-deal-pts').innerText = tdP;
+    document.getElementById('t-proj-pts').innerText = tpP;
+    document.getElementById('t-cap-pct').innerText = cap + '%';
+    document.getElementById('t-fill-deals').style.width = (tdP/tM*100)+'%';
+    document.getElementById('t-fill-projects').style.width = (tpP/tM*100)+'%';
+    document.getElementById('t-risk-total').innerText = `${yR+rR} At-Risk`;
+    document.getElementById('t-risk-breakdown').innerText = `${yR}Y / ${rR}R Breakdown`;
+    document.getElementById('t-past-due-proj').innerText = `${pdC} Past Due Projects`;
+}
+
+function renderContent() { renderRoster(); renderAssignment(); updateBadge(); }
+function setSort(t) { if (currentSort === t) sortDir = sortDir === 'desc' ? 'asc' : 'desc'; else { currentSort = t; sortDir = 'desc'; } document.querySelectorAll('.btn-sort').forEach(b => b.classList.remove('active-sort')); document.getElementById('sort-'+t).classList.add('active-sort'); renderContent(); }
+function switchLayout(l) { currentLayout = l; document.getElementById('btn-list').classList.toggle('active', l==='list'); document.getElementById('btn-card').classList.toggle('active', l==='card'); renderContent(); }
+function updateBadge() { const total = dealQueue.length + teamData.filter(i => !i.onRotation).length; const badge = document.getElementById('assignment-badge'); badge.innerText = total; badge.style.display = total > 0 ? 'inline-block' : 'none'; }
+function resumeIM(name) { teamData.find(i => i.name === name).onRotation = true; renderContent(); }
+
+</script>
+</body>
+</html>
