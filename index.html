@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Official ParentSquare Palette */
+      /* Official ParentSquare Palette  */
       --ps-green: #85ad33;
       --ps-dark-green: #618025;
       --ps-blue: #7bbaf0;
@@ -27,7 +27,6 @@
     .logo img { height: 40px; width: auto; } 
     .header-text h1 { color: var(--ps-green); margin: 0; font-size: 24px; font-weight: 700; line-height: 1.2; }
 
-    /* Summary Cards */
     .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
     .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--ps-green); min-height: 130px; display: flex; flex-direction: column; justify-content: center; }
     .card .main-val { font-size: 22px; font-weight: 700; color: var(--ps-dark-green); }
@@ -38,28 +37,26 @@
     .cap-fill-deals { height: 100%; background: var(--ps-green); transition: width 0.5s; }
     .cap-fill-projects { height: 100%; background: var(--ps-blue); transition: width 0.5s; }
 
-    /* Sub-Tab Navigation */
     .sub-tabs { display: flex; gap: 24px; border-bottom: 2px solid #ddd; margin-bottom: 24px; }
     .sub-tab { padding-bottom: 12px; cursor: pointer; font-weight: 600; color: #666; font-size: 13px; position: relative; display: flex; align-items: center; }
     .sub-tab.active { color: var(--ps-green); border-bottom: 4px solid var(--ps-green); }
 
+    /* Notification Badge */
     .tab-badge { background: var(--ps-red); color: white; border-radius: 10px; padding: 2px 6px; font-size: 9px; margin-left: 6px; font-weight: 700; display: none; }
 
-    /* Controls */
     .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; flex-wrap: wrap; }
     .control-group { display: flex; align-items: center; gap: 8px; }
     .btn-action { background: white; border: 1px solid #ddd; padding: 6px 12px; cursor: pointer; font-size: 11px; font-weight: 600; border-radius: 4px; transition: 0.2s; }
     .btn-action.active { background: var(--ps-green) !important; color: white !important; border-color: var(--ps-green) !important; }
     .btn-sort.active-sort { background: var(--ps-blue); color: white; border-color: var(--ps-blue); }
 
-    /* Table & Cards */
     table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #eee; font-size: 12px; margin-bottom: 10px; }
     th { background: #f9f9f9; color: var(--ps-dark-gray); padding: 10px; text-align: left; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #ddd; }
     .sortable-th { cursor: pointer; color: var(--ps-blue); }
     td { padding: 10px; border-bottom: 1px solid #eee; vertical-align: middle; }
     tbody tr:nth-child(even) { background-color: #fafafa; }
 
-    .im-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .im-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; margin-bottom: 25px; }
     .im-card { background: white; padding: 15px; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-top: 3px solid var(--ps-green); height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
     .im-card h3 { margin: 0; font-size: 13px; color: var(--ps-dark-green); }
     .im-card .sub-info { font-size: 9px; color: #888; font-weight: 600; text-transform: uppercase; margin-top: 2px; }
@@ -67,25 +64,32 @@
 
     .review-card { background: var(--ps-light-green); border-left: 6pt solid var(--ps-green); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
     .alert-card { background: #fffaf0; border-left: 6pt solid var(--ps-red); padding: 15px; border-radius: 8px; margin-bottom: 10px; }
-    
-    /* Green Group Header (Locked) */
+
+    /* Reverted Green Group Header */
     .group-header { background: var(--ps-green); color: white; padding: 8px 12px; margin: 20px 0 10px 0; font-weight: 700; font-size: 11px; text-transform: uppercase; border-radius: 4px; }
+
     .section-header { color: var(--ps-dark-green); border-bottom: 2px solid var(--ps-light-green); padding-bottom: 5px; margin: 35px 0 15px 0; font-size: 18px; font-weight: 700; }
 
-    /* Reporting Visuals */
-    .report-widget { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 24px; }
-    .chart-container { height: 380px; width: 100%; display: flex; align-items: flex-end; gap: 12px; padding: 40px 10px 65px 10px; position: relative; border-bottom: 1px solid #eee; overflow-x: auto; }
+    /* Reporting Specific Styles */
+    .reporting-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    .report-widget { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 24px; cursor: grab; }
+    .report-widget:active { cursor: grabbing; }
+    .report-widget h4 { margin: 0 0 20px 0; color: var(--ps-dark-gray); font-size: 14px; border-left: 4px solid var(--ps-blue); padding-left: 10px; }
+    
+    .chart-container { height: 350px; width: 100%; display: flex; align-items: flex-end; gap: 12px; padding: 40px 10px 65px 10px; position: relative; border-bottom: 1px solid #eee; overflow-x: auto; }
     .bar-wrapper { flex: 1; min-width: 35px; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; }
     .bar-stack { width: 28px; display: flex; flex-direction: column-reverse; transition: 0.3s; position: relative; z-index: 1; }
     .bar-segment-deal { background: var(--ps-green); width: 100%; }
     .bar-segment-proj { background: var(--ps-blue); width: 100%; }
-    .mpc-outline { position: absolute; bottom: 0; width: 34px; border: 2px dashed #bbb; z-index: 2; pointer-events: none; }
+    .mpc-outline { position: absolute; bottom: 0; width: 34px; border: 2px dashed #999; z-index: 2; pointer-events: none; }
     .bar-label { position: absolute; bottom: -55px; transform: rotate(-45deg); font-size: 9px; white-space: nowrap; text-align: right; width: 100px; right: -35px; font-weight: 600; }
+    
+    .reporting-controls { background: white; padding: 20px; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
 
     footer { text-align: center; padding: 40px; color: var(--ps-dark-gray); font-size: 10px; font-weight: 600; }
   </style>
 </head>
-<body onload="initDashboard()">
+<body onload="initApp()">
 
 <div class="container">
   <header>
@@ -158,59 +162,75 @@
   <div id="view-assignment" class="tab-content" style="display:none;">
     <div class="section-header">New Deal Queue</div>
     <div id="deal-queue-container"></div>
+
     <div class="section-header">Rotation Removal Alerts</div>
     <div id="alerts-container"></div>
+
     <div class="section-header">Manual Rotation Removal</div>
     <div style="background:white; padding:20px; border-radius:8px; border:1px solid #ddd; display:flex; gap:15px; align-items:center; margin-bottom: 30px;">
         <label style="font-size:12px; font-weight:700;">Select IM:</label>
         <select id="manual-im-select" style="padding:6px; font-size:12px; width: 250px;"></select>
         <button class="btn-action active" onclick="triggerManualRemoval()">Remove from Rotation</button>
     </div>
+
     <div class="section-header">IM Account Eligibility</div>
     <div id="eligibility-container"></div>
   </div>
 
   <div id="view-reporting" class="tab-content" style="display:none;">
-    <div style="background:white; padding:20px; border-radius:8px; margin-bottom:24px; box-shadow:0 2px 6px rgba(0,0,0,0.05);">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-                <h3 style="margin:0 0 10px 0; color:var(--ps-dark-green);">Reporting Trends</h3>
-                <div class="control-group">
-                    <span style="font-size:10px; font-weight:700; color:#888;">SEASON:</span>
-                    <select id="season-filter" style="padding:4px; font-size:11px;" onchange="renderReports()">
-                        <option value="year">Full Year</option>
-                        <option value="bts">BTS Season (Apr-Sept)</option>
-                        <option value="q1">Q1 (Sept-Nov)</option>
-                        <option value="q2">Q2 (Dec-Feb)</option>
-                        <option value="q3">Q3 (Mar-May)</option>
-                        <option value="q4" selected>Q4 (Jun-Aug)</option>
-                    </select>
-                </div>
-            </div>
+    <div class="reporting-controls">
+        <div>
+            <h3 style="margin:0 0 10px 0; color:var(--ps-dark-green);">Reporting & Trend Analysis</h3>
             <div class="control-group">
-                <span style="font-size:10px; font-weight:700; color:#888;">POINT VISIBILITY:</span>
-                <label style="font-size:11px;"><input type="checkbox" id="check-deal" checked onchange="renderReports()"> Deal Pts</label>
-                <label style="font-size:11px; margin-left:10px;"><input type="checkbox" id="check-proj" checked onchange="renderReports()"> Project Pts</label>
+                <span style="font-size:10px; font-weight:700; color:#888;">DATE RANGE:</span>
+                <select id="report-range" style="padding:4px; font-size:11px;" onchange="renderReporting()">
+                    <option value="bts">BTS Season (Apr-Sept)</option>
+                    <option value="q1">Q1 (Sept-Nov)</option>
+                    <option value="q2">Q2 (Dec-Feb)</option>
+                    <option value="q3">Q3 (Mar-May)</option>
+                    <option value="q4" selected>Q4 (Jun-Aug)</option>
+                    <option value="year">Full Year</option>
+                </select>
+                <input type="date" class="btn-action" style="padding:3px;"> to <input type="date" class="btn-action" style="padding:3px;">
             </div>
+        </div>
+        <div class="control-group">
+            <span style="font-size:10px; font-weight:700; color:#888;">POINT VISIBILITY:</span>
+            <label style="font-size:11px;"><input type="checkbox" id="inc-deals" checked onchange="renderReporting()"> Deal Points</label>
+            <label style="font-size:11px; margin-left:10px;"><input type="checkbox" id="inc-projs" checked onchange="renderReporting()"> Project Points</label>
+            <button class="btn-action" style="margin-left:20px; font-size:9px;" onclick="resetReports()">Reset Layout</button>
         </div>
     </div>
 
-    <div class="report-widget">
-        <h4>Individual Workload vs. MPC (T1 → T4)</h4>
-        <div class="chart-container" id="individual-chart-body"></div>
-    </div>
+    <div class="reporting-grid" id="reporting-grid">
+        <div class="report-widget" draggable="true" id="widget-individual" ondragstart="onDragStart(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+            <h4>Individual Workload vs MPC (T1-T4)</h4>
+            <div class="chart-container" id="chart-indiv"></div>
+        </div>
 
-    <div class="report-widget">
-        <h4>Territory Capacity Comparison</h4>
-        <div class="chart-container" id="territory-chart-body"></div>
+        <div class="report-widget" draggable="true" id="widget-territory" ondragstart="onDragStart(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+            <h4>Territory Workload Comparison</h4>
+            <div class="chart-container" id="chart-terri"></div>
+        </div>
+
+        <div class="report-widget" draggable="true" id="widget-risk" ondragstart="onDragStart(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+            <h4>Correlation: Point Load vs. Red Deal Count</h4>
+            <div style="height:250px; background:#f9f9f9; border:1px dashed #ddd; display:flex; align-items:center; justify-content:center; color:#999; font-size:12px; border-radius:8px;">
+                [Dynamic Line/Area Chart Integration Point]
+            </div>
+        </div>
+
+        <div class="report-widget" draggable="true" id="widget-audit" ondragstart="onDragStart(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+            <h4>Rotation Removal Audit</h4>
+            <div id="removal-audit-body"></div>
+        </div>
     </div>
   </div>
 
-  <footer>© 2026 ParentSquare • Total Team Workload Dashboard</footer>
+  <footer>© 2026 ParentSquare • Total Team Workload</footer>
 </div>
 
 <script>
-// Logic Block 1: Shared Core Data
 const MPC_VALUES = { "T1": 70, "T2": 90, "T3": 120, "T4": 120, "T5": 90 };
 const SIZE_PTS = { "Strategic": 4, "Large": 2, "Medium": 3, "Small": 1 };
 const SIS_PTS = { "PowerSchool": 3, "Infinite Campus": 2, "Aeries": 2, "Skyward SFTP": 2, "Clever": 2, "RenWeb/FACTS": 1 };
@@ -218,102 +238,130 @@ const ADJ_OPTIONS = ["Extended Launch", "Proof of Concept", "Pilots", "DSAs/DUAs
 
 let currentLayout = 'list', currentSort = 'tier', currentTZ = 'all', sortDir = 'desc', eligSortDir = 'desc';
 
-// Roster: 24 Unique Names calibrated to >= 50% capacity
+// Calibrated Roster: 24 IMs >= 50%
 let teamData = [
-  { name: "Alex Rivers", tz: "EST", tier: "T4", dealPts: 65, projPts: 20, deals: 12, projects: 2, pd: 0, y: 1, r: 0, velocity: 2, med: true, lg: true, onRotation: true, reason: "" },
-  { name: "Jordan Miller", tz: "EST", tier: "T3", dealPts: 70, projPts: 15, deals: 11, projects: 1, pd: 0, y: 0, r: 0, velocity: 3, med: true, lg: true, onRotation: true, reason: "" },
-  { name: "Casey Smith", tz: "EST", tier: "T2", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 1, y: 1, r: 0, velocity: 1, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "Morgan Lane", tz: "CST", tier: "T1", dealPts: 45, projPts: 10, deals: 9, projects: 2, pd: 0, y: 0, r: 1, velocity: 6, med: true, lg: false, onRotation: false, reason: "Velocity Limit" },
-  { name: "Riley West", tz: "CST", tier: "T4", dealPts: 95, projPts: 35, deals: 15, projects: 3, pd: 0, y: 2, r: 1, velocity: 4, med: true, lg: true, onRotation: true, reason: "" },
-  { name: "Taylor Brooks", tz: "PST", tier: "T3", dealPts: 85, projPts: 10, deals: 12, projects: 1, pd: 1, y: 1, r: 0, velocity: 3, med: true, lg: true, onRotation: true, reason: "" },
-  { name: "Quinn Jones", tz: "PST", tier: "T2", dealPts: 50, projPts: 20, deals: 7, projects: 1, pd: 0, y: 0, r: 0, velocity: 2, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "Skyler Page", tz: "EST", tier: "T1", dealPts: 45, projPts: 5, deals: 8, projects: 1, pd: 0, y: 0, r: 0, velocity: 1, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "Dakota Hayes", tz: "CST", tier: "T4", dealPts: 125, projPts: 10, deals: 16, projects: 1, pd: 1, y: 1, r: 2, velocity: 4, med: true, lg: true, onRotation: false, reason: "Capacity Overload" },
-  { name: "Jamie Frost", tz: "PST", tier: "T3", dealPts: 65, projPts: 20, deals: 10, projects: 2, pd: 0, y: 0, r: 0, velocity: 2, med: true, lg: true, onRotation: true, reason: "" },
-  { name: "Peyton Gray", tz: "EST", tier: "T2", dealPts: 60, projPts: 5, deals: 9, projects: 0, pd: 0, y: 0, r: 0, velocity: 1, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "Reese Dale", tz: "CST", tier: "T1", dealPts: 40, projPts: 15, deals: 8, projects: 3, pd: 1, y: 1, r: 0, velocity: 3, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "Charlie King", tz: "PST", tier: "T4", dealPts: 85, projPts: 40, deals: 13, projects: 4, pd: 2, y: 2, r: 0, velocity: 7, med: true, lg: true, onRotation: false, reason: "High Velocity" },
-  { name: "Emerson True", tz: "EST", tier: "T3", dealPts: 100, projPts: 10, deals: 14, projects: 1, pd: 0, y: 3, r: 1, velocity: 3, med: true, lg: true, onRotation: true, reason: "" },
-  { name: "Sutton Wood", tz: "CST", tier: "T2", dealPts: 65, projPts: 15, deals: 9, projects: 1, pd: 0, y: 0, r: 0, velocity: 2, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "Blake Vale", tz: "PST", tier: "T1", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 0, y: 0, r: 0, velocity: 4, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "Parker Jade", tz: "CST", tier: "T3", dealPts: 85, projPts: 15, deals: 10, projects: 2, pd: 0, y: 1, r: 0, velocity: 2, med: true, lg: true, onRotation: true, reason: "" },
-  { name: "Avery Sky", tz: "PST", tier: "T2", dealPts: 60, projPts: 10, deals: 9, projects: 1, pd: 1, y: 1, r: 0, velocity: 1, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "Logan Moss", tz: "EST", tier: "T4", dealPts: 80, projPts: 10, deals: 11, projects: 1, pd: 0, y: 0, r: 0, velocity: 2, med: true, lg: true, onRotation: true, reason: "" },
-  { name: "Kendall Bell", tz: "CST", tier: "T1", dealPts: 55, projPts: 5, deals: 8, projects: 1, pd: 0, y: 0, r: 0, velocity: 1, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "Robin Kite", tz: "PST", tier: "T1", dealPts: 50, projPts: 5, deals: 9, projects: 1, pd: 0, y: 1, r: 0, velocity: 2, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "Stevie Lynn", tz: "EST", tier: "T2", dealPts: 65, projPts: 12, deals: 10, projects: 3, pd: 1, y: 1, r: 1, velocity: 3, med: true, lg: false, onRotation: true, reason: "" },
-  { name: "River Pond", tz: "CST", tier: "T3", dealPts: 95, projPts: 15, deals: 12, projects: 2, pd: 2, y: 2, r: 1, velocity: 5, med: true, lg: true, onRotation: true, reason: "" },
-  { name: "Phoenix Day", tz: "PST", tier: "T4", dealPts: 85, projPts: 15, deals: 11, projects: 2, pd: 1, y: 1, r: 0, velocity: 2, med: true, lg: true, onRotation: true, reason: "" }
+  { name: "Alex Rivers", tz: "EST", tier: "T4", dealPts: 65, projPts: 25, deals: 12, projects: 2, pd: 0, y: 1, r: 0, onRotation: true, reason: "", velocity: 2 },
+  { name: "Jordan Miller", tz: "EST", tier: "T3", dealPts: 70, projPts: 15, deals: 11, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "", velocity: 3 },
+  { name: "Casey Smith", tz: "EST", tier: "T2", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 1, y: 1, r: 0, onRotation: true, reason: "", velocity: 1 },
+  { name: "Morgan Lane", tz: "CST", tier: "T1", dealPts: 45, projPts: 15, deals: 9, projects: 2, pd: 0, y: 0, r: 1, onRotation: false, reason: "Velocity Limit", velocity: 6 },
+  { name: "Riley West", tz: "CST", tier: "T4", dealPts: 95, projPts: 35, deals: 15, projects: 3, pd: 0, y: 2, r: 1, onRotation: true, reason: "", velocity: 4 },
+  { name: "Taylor Brooks", tz: "PST", tier: "T3", dealPts: 85, projPts: 10, deals: 12, projects: 1, pd: 1, y: 1, r: 0, onRotation: true, reason: "", velocity: 3 },
+  { name: "Quinn Jones", tz: "PST", tier: "T2", dealPts: 50, projPts: 20, deals: 7, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "", velocity: 2 },
+  { name: "Skyler Page", tz: "EST", tier: "T1", dealPts: 45, projPts: 10, deals: 8, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "", velocity: 1 },
+  { name: "Dakota Hayes", tz: "CST", tier: "T4", dealPts: 115, projPts: 10, deals: 16, projects: 1, pd: 1, y: 1, r: 2, onRotation: false, reason: "Capacity Overload", velocity: 4 },
+  { name: "Jamie Frost", tz: "PST", tier: "T3", dealPts: 65, projPts: 20, deals: 10, projects: 2, pd: 0, y: 0, r: 0, onRotation: true, reason: "", velocity: 2 },
+  { name: "Peyton Gray", tz: "EST", tier: "T2", dealPts: 60, projPts: 5, deals: 9, projects: 0, pd: 0, y: 0, r: 0, onRotation: true, reason: "", velocity: 1 },
+  { name: "Reese Dale", tz: "CST", tier: "T1", dealPts: 40, projPts: 15, deals: 8, projects: 3, pd: 1, y: 1, r: 0, onRotation: true, reason: "", velocity: 3 },
+  { name: "Charlie King", tz: "PST", tier: "T4", dealPts: 85, projPts: 40, deals: 13, projects: 4, pd: 2, y: 2, r: 0, onRotation: false, reason: "High Velocity", velocity: 7 },
+  { name: "Emerson True", tz: "EST", tier: "T3", dealPts: 100, projPts: 10, deals: 14, projects: 1, pd: 0, y: 3, r: 1, onRotation: true, reason: "", velocity: 3 },
+  { name: "Sutton Wood", tz: "CST", tier: "T2", dealPts: 65, projPts: 15, deals: 9, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "", velocity: 2 },
+  { name: "Blake Vale", tz: "PST", tier: "T1", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 0, y: 0, r: 0, onRotation: true, reason: "", velocity: 4 },
+  { name: "Parker Jade", tz: "CST", tier: "T3", dealPts: 75, projPts: 20, deals: 10, projects: 2, pd: 0, y: 1, r: 0, onRotation: true, reason: "", velocity: 2 },
+  { name: "Avery Sky", tz: "PST", tier: "T2", dealPts: 60, projPts: 10, deals: 9, projects: 1, pd: 1, y: 1, r: 0, onRotation: true, reason: "", velocity: 1 },
+  { name: "Logan Moss", tz: "EST", tier: "T4", dealPts: 80, projPts: 10, deals: 11, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "", velocity: 2 },
+  { name: "Kendall Bell", tz: "CST", tier: "T1", dealPts: 55, projPts: 5, deals: 8, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "", velocity: 1 },
+  { name: "Robin Kite", tz: "PST", tier: "T1", dealPts: 50, projPts: 10, deals: 9, projects: 1, pd: 0, y: 1, r: 0, onRotation: true, reason: "", velocity: 2 },
+  { name: "Stevie Lynn", tz: "EST", tier: "T2", dealPts: 65, projPts: 12, deals: 10, projects: 3, pd: 1, y: 1, r: 1, onRotation: true, reason: "", velocity: 3 },
+  { name: "River Pond", tz: "CST", tier: "T3", dealPts: 95, projPts: 15, deals: 12, projects: 2, pd: 2, y: 2, r: 1, onRotation: true, reason: "", velocity: 5 },
+  { name: "Phoenix Day", tz: "PST", tier: "T4", dealPts: 85, projPts: 15, deals: 11, projects: 2, pd: 1, y: 1, r: 0, onRotation: true, reason: "", velocity: 2 }
 ];
 
 let dealQueue = [{ id: 901, name: "Mountain View USD", size: "Large", sis: "Infinite Campus", tz: "PST", adj: [] }];
 
-// Logic Block 2: Reporting Calculations
-function renderReports() {
-    const showDeals = document.getElementById('check-deal').checked;
-    const showProjs = document.getElementById('check-proj').checked;
+// Logic Block: Reporting & Charts
+function renderReporting() {
+    const showDeals = document.getElementById('inc-deals').checked;
+    const showProjs = document.getElementById('inc-projs').checked;
     const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
 
-    // 1. Individual Chart
-    const indBody = document.getElementById('individual-chart-body');
-    indBody.innerHTML = '';
+    // 1. Individual Chart (T1 to T4)
+    const indBody = document.getElementById('chart-indiv'); indBody.innerHTML = '';
     const sortedIMs = [...filtered].sort((a,b) => a.tier.localeCompare(b.tier));
 
     sortedIMs.forEach(im => {
-        const mpc = MPC_VALUES[im.tier], dPts = showDeals ? im.dealPts : 0, pPts = showProjs ? im.projPts : 0;
-        const scale = 2.4;
+        const mpc = MPC_VALUES[im.tier], dP = showDeals ? im.dealPts : 0, pP = showProjs ? im.projPts : 0, scale = 2.4;
         const w = document.createElement('div'); w.className = 'bar-wrapper';
-        w.innerHTML = `
-            <div class="bar-stack" style="height:${Math.max(dPts+pPts, mpc)*scale}px;">
-                <div class="bar-segment-deal" style="height:${dPts*scale}px"></div>
-                <div class="bar-segment-proj" style="height:${pPts*scale}px"></div>
-                <div class="mpc-outline" style="height:${mpc*scale}px; width:32px; left:-2px;"></div>
-            </div>
-            <div class="bar-label">${im.name} [${im.tier}]</div>`;
+        w.innerHTML = `<div class="bar-stack" style="height:${Math.max(dP+pP, mpc)*scale}px;">
+            <div class="bar-segment-deal" style="height:${dP*scale}px"></div>
+            <div class="bar-segment-proj" style="height:${pP*scale}px"></div>
+            <div class="mpc-outline" style="height:${mpc*scale}px;"></div>
+        </div><div class="bar-label">${im.name} [${im.tier}]</div>`;
         indBody.appendChild(w);
     });
 
-    // 2. Territory Chart
-    const terBody = document.getElementById('territory-chart-body');
-    terBody.innerHTML = '';
+    // 2. Territory Comparison
+    const terBody = document.getElementById('chart-terri'); terBody.innerHTML = '';
     ["EST", "CST", "PST"].forEach(region => {
         const ims = teamData.filter(i => i.tz === region);
         let rd=0, rp=0, rm=0; ims.forEach(i => { rd+=i.dealPts; rp+=i.projPts; rm+=MPC_VALUES[i.tier]; });
-        const dPts = showDeals ? rd : 0, pPts = showProjs ? rp : 0, scale = 0.35;
+        const dP = showDeals ? rd : 0, pP = showProjs ? rp : 0, scale = 0.35;
         const w = document.createElement('div'); w.className = 'bar-wrapper';
-        w.innerHTML = `
-            <div class="bar-stack" style="height:${Math.max(dPts+pPts, rm)*scale}px; width:60px;">
-                <div class="bar-segment-deal" style="height:${dPts*scale}px"></div>
-                <div class="bar-segment-proj" style="height:${pPts*scale}px"></div>
-                <div class="mpc-outline" style="height:${rm*scale}px; width:66px; left:-3px;"></div>
-            </div>
-            <div class="bar-label" style="bottom:-30px; transform:none; right:auto; width:auto; font-size:12px;">${region} Region</div>`;
+        w.innerHTML = `<div class="bar-stack" style="height:${Math.max(dP+pP, rm)*scale}px; width:50px;">
+            <div class="bar-segment-deal" style="height:${dP*scale}px"></div>
+            <div class="bar-segment-proj" style="height:${pP*scale}px"></div>
+            <div class="mpc-outline" style="height:${rm*scale}px; width:56px; left:-3px;"></div>
+        </div><div class="bar-label" style="bottom:-30px; transform:none; right:auto; width:auto; font-size:12px;">${region} Region</div>`;
         terBody.appendChild(w);
     });
+
+    // 3. Audit Log
+    const auditBody = document.getElementById('removal-audit-body');
+    const flagged = teamData.filter(i => !i.onRotation);
+    auditBody.innerHTML = `<table><thead><tr><th>Name</th><th>Reason</th><th>Status</th></tr></thead>
+        <tbody>${flagged.map(i => `<tr><td>${i.name}</td><td>${i.reason}</td><td>Inactive</td></tr>`).join('')}</tbody></table>`;
 }
 
-// Logic Block 3: Locked Dashboard Core
-function initDashboard() { updateMetrics(); renderContent(); }
-function setTZFilter(tz, btn) { currentTZ = tz; document.querySelectorAll('.filter-tz').forEach(b => b.classList.remove('active')); btn.classList.add('active'); updateMetrics(); renderContent(); renderReports(); }
+// Draggable Engine
+function onDragStart(e) { e.dataTransfer.setData("text/plain", e.target.id); }
+function onDragOver(e) { e.preventDefault(); }
+function onDrop(e) {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    const dragged = document.getElementById(id);
+    const dropTarget = e.target.closest('.report-widget');
+    if (dropTarget && dragged !== dropTarget) {
+        const grid = document.getElementById('reporting-grid');
+        grid.insertBefore(dragged, dropTarget);
+        saveOrder();
+    }
+}
+function saveOrder() {
+    const order = Array.from(document.querySelectorAll('.report-widget')).map(w => w.id);
+    localStorage.setItem('rep_order', JSON.stringify(order));
+}
+function loadOrder() {
+    const order = JSON.parse(localStorage.getItem('rep_order'));
+    if (order) {
+        const grid = document.getElementById('reporting-grid');
+        order.forEach(id => grid.appendChild(document.getElementById(id)));
+    }
+}
+function resetReports() { localStorage.removeItem('rep_order'); location.reload(); }
+
+// App Core
+function initApp() { updateMetrics(); renderContent(); loadOrder(); }
 function switchSubTab(tab) {
     document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
     document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
     document.getElementById('view-' + tab).style.display = 'block';
     document.getElementById('tab-' + tab).classList.add('active');
-    if(tab === 'reporting') renderReports();
+    if (tab === 'reporting') renderReporting();
+}
+function setTZFilter(tz, btn) {
+    currentTZ = tz; document.querySelectorAll('.filter-tz').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); updateMetrics(); renderContent(); if(document.getElementById('view-reporting').style.display === 'block') renderReporting();
 }
 function triggerManualRemoval() {
     const name = document.getElementById('manual-im-select').value;
     const reason = prompt(`Removal reason for ${name}:`);
-    if (reason) { const im = teamData.find(i => i.name === name); im.onRotation = false; im.reason = reason; updateBadge(); renderContent(); }
+    if (reason) { const im = teamData.find(i => i.name === name); im.onRotation = false; im.reason = reason; updateBadge(); renderContent(); if(activeTab === 'reporting') renderReporting(); }
 }
 function resumeIM(name) { const im = teamData.find(i => i.name === name); im.onRotation = true; im.reason = ""; updateBadge(); renderContent(); }
 function toggleEligSort() { eligSortDir = eligSortDir === 'desc' ? 'asc' : 'desc'; renderAssignment(); }
 function updateBadge() {
     const alerts = teamData.filter(im => !im.onRotation).length;
-    const total = dealQueue.length + alerts;
-    const badge = document.getElementById('assignment-badge');
-    badge.innerText = total; badge.style.display = total > 0 ? 'inline-block' : 'none';
+    const badge = document.getElementById('assignment-badge'); badge.innerText = dealQueue.length + alerts;
+    badge.style.display = (dealQueue.length + alerts) > 0 ? 'inline-block' : 'none';
 }
 function updateQAdj(id, opt) { const d = dealQueue.find(x => x.id === id); const i = d.adj.indexOf(opt); i > -1 ? d.adj.splice(i,1) : d.adj.push(opt); renderAssignment(); }
 
@@ -327,10 +375,11 @@ function renderRoster() {
     });
     let groups = {};
     sorted.forEach(im => {
-        const pct = Math.round(((im.dealPts+im.projPts)/MPC_VALUES[im.tier])*100);
-        const key = currentSort === 'tier' ? `Tier ${im.tier.slice(1)}` : (pct>=90?"Critical":pct>=80?"High":"Stable");
+        const pct = Math.round(((im.dealPts + im.projPts) / MPC_VALUES[im.tier]) * 100);
+        const key = currentSort === 'tier' ? `Tier ${im.tier.slice(1)}` : (pct >= 90 ? "Critical" : (pct >= 80 ? "High" : "Stable"));
         if (!groups[key]) groups[key] = []; groups[key].push(im);
     });
+
     Object.keys(groups).forEach(key => {
         const h = document.createElement('div'); h.className = 'group-header'; h.innerText = key; display.appendChild(h);
         if (currentLayout === 'list') {
@@ -343,13 +392,14 @@ function renderRoster() {
         } else {
             const grid = document.createElement('div'); grid.className = 'im-grid'; display.appendChild(grid);
             groups[key].forEach(im => {
-                const m = MPC_VALUES[im.tier], pct = Math.round(((im.dealPts+im.projPts)/m)*100), c = pct>=90?'var(--ps-red)':pct>=80?'var(--ps-gold)':'var(--ps-green)';
+                const m = MPC_VALUES[im.tier], pct = Math.round(((im.dealPts+im.projPts)/m)*100), c = pct >= 90 ? 'var(--ps-red)' : (pct >= 80 ? 'var(--ps-gold)' : 'var(--ps-green)');
                 grid.innerHTML += `<div class="im-card" style="border-top-color:${c}">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                        <div><h3>${im.name}</h3><span class="sub-info">${im.tz} • Tier ${im.tier.slice(1)}</span></div><span style="font-weight:700; color:${c}; font-size:12px;">${pct}%</span>
+                        <div><h3>${im.name}</h3><span class="sub-info">${im.tz} • Tier ${im.tier.slice(1)}</span></div>
+                        <span style="font-weight:700; color:${c}; font-size:12px;">${pct}%</span>
                     </div>
-                    <div class="stats">Pts: <b>${im.dealPts+im.projPts}</b>/${m} | Deals: ${im.deals}<br>Projects past due: <b style="${im.pd>0?'color:var(--ps-red)':''}">${im.pd}</b></div>
-                    <div class="summary-cap-bar"><div style="width:${(im.dealPts/m)*100}%; background:var(--ps-green);"></div><div style="width:${(im.projPts/m)*100}%; background:var(--ps-blue);"></div></div>
+                    <div class="stats">Pts: <b>${im.dealPts+im.projPts}</b>/${m} | Deals: ${im.deals}<br>Projects past due: <b style="${im.pd > 0 ? 'color:var(--ps-red);' : ''}">${im.pd}</b></div>
+                    <div class="summary-cap-bar" style="height:6px;"><div style="width:${(im.dealPts/m)*100}%; background:var(--ps-green);"></div><div style="width:${(im.projPts/m)*100}%; background:var(--ps-blue);"></div></div>
                 </div>`;
             });
         }
@@ -359,33 +409,17 @@ function renderRoster() {
 function renderAssignment() {
     const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
     const qContainer = document.getElementById('deal-queue-container');
-    qContainer.innerHTML = dealQueue.map(deal => {
-        const total = (SIZE_PTS[deal.size] || 0) + (SIS_PTS[deal.sis] || 0) + deal.adj.length;
-        return `<div class="review-card"><div style="display:flex; justify-content:space-between;">
-            <div><h4>${deal.name} (${deal.tz})</h4><p style="font-size:11px; color:#666;">Base: ${deal.size} + ${deal.sis}</p>
-            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:5px;">
-                ${ADJ_OPTIONS.map(opt => `<label style="font-size:10px;"><input type="checkbox" onchange="updateQAdj(${deal.id},'${opt}')" ${deal.adj.includes(opt)?'checked':''}> ${opt} (+1)</label>`).join('')}
-            </div></div>
-            <div style="text-align:right;"><div style="font-size:16px; font-weight:700; color:var(--ps-dark-green);">Projected: [${total}]</div>
-            <select style="margin:10px 0; padding:4px; font-size:11px; width: 100%;">${filtered.map(im => `<option>${im.name}</option>`).join('')}</select>
-            <button class="btn-action active" style="width:100%;">Confirm</button></div>
-        </div></div>`;
-    }).join('');
-
+    qContainer.innerHTML = dealQueue.map(deal => `<div class="review-card"><div style="display:flex; justify-content:space-between;"><div><h4>${deal.name} (${deal.tz})</h4><p>Base: ${deal.size}</p>
+        <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:5px;">${ADJ_OPTIONS.map(opt => `<label style="font-size:10px;"><input type="checkbox" onchange="updateQAdj(${deal.id},'${opt}')"> ${opt} (+1)</label>`).join('')}</div></div>
+        <div style="text-align:right;"><select style="font-size:11px; padding:4px; width:100%;">${filtered.map(im => `<option>${im.name}</option>`).join('')}</select><button class="btn-action active" style="width:100%; margin-top:5px;">Confirm</button></div></div></div>`).join('');
+    
     const aContainer = document.getElementById('alerts-container');
-    aContainer.innerHTML = filtered.filter(im => !im.onRotation).map(im => `
-        <div class="alert-card"><div style="display:flex; justify-content:space-between; align-items:center;">
-        <div><b>${im.name} (${im.tz})</b> - Reason: ${im.reason}</div>
-        <div style="display:flex; gap:10px;"><button class="btn-action" onclick="resumeIM('${im.name}')">Resume</button><input type="date" style="font-size:10px;"></div>
-        </div></div>`).join('');
-
+    aContainer.innerHTML = filtered.filter(im => !im.onRotation).map(im => `<div class="alert-card"><b>${im.name} (${im.tz})</b> - Reason: ${im.reason} <button class="btn-action" onclick="resumeIM('${im.name}')">Resume</button></div>`).join('');
+    
     document.getElementById('manual-im-select').innerHTML = teamData.filter(im => im.onRotation).map(im => `<option value="${im.name}">${im.name} (${im.tz})</option>`).join('');
 
     const eContainer = document.getElementById('eligibility-container');
-    const eligSorted = [...filtered].sort((a,b) => {
-        const vA = parseInt(a.tier.slice(1)), vB = parseInt(b.tier.slice(1));
-        return eligSortDir === 'desc' ? vB - vA : vA - vB;
-    });
+    const eligSorted = [...filtered].sort((a,b) => parseInt(a.tier.slice(1)) < parseInt(b.tier.slice(1)) ? 1 : -1);
     eContainer.innerHTML = `<table><thead><tr><th>Name</th><th class="sortable-th" onclick="toggleEligSort()">Tier ↑↓</th><th>Med</th><th>Lg/Ent</th></tr></thead>
         <tbody>${eligSorted.map(im => `<tr><td><b>${im.name}</b></td><td>${im.tier}</td><td><input type="checkbox" ${im.med?'checked':''}></td><td><input type="checkbox" ${im.lg?'checked':''}></td></tr>`).join('')}</tbody></table>`;
 }
@@ -395,18 +429,12 @@ function updateMetrics() {
     const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
     filtered.forEach(im => { tdP+=im.dealPts; tpP+=im.projPts; tM+=MPC_VALUES[im.tier]; spC+=im.projects; pdC+=im.pd; yR+=im.y; rR+=im.r; dC+=im.deals; });
     const tot = tdP + tpP, cap = Math.round((tot/tM)*100);
-    document.getElementById('t-im-count').innerText = filtered.length;
-    document.getElementById('t-deal-count').innerText = dC;
-    document.getElementById('t-strat-proj').innerText = spC;
-    document.getElementById('t-total-pts').innerText = tot;
-    document.getElementById('t-max-pts').innerText = tM;
-    document.getElementById('t-deal-pts').innerText = tdP;
-    document.getElementById('t-proj-pts').innerText = tpP;
-    document.getElementById('t-cap-pct').innerText = cap + '%';
-    document.getElementById('t-fill-deals').style.width = (tdP/tM*100)+'%';
-    document.getElementById('t-fill-projects').style.width = (tpP/tM*100)+'%';
-    document.getElementById('t-risk-total').innerText = `${yR+rR} At-Risk Deals`;
-    document.getElementById('t-risk-breakdown').innerText = `${yR}Y / ${rR}R Breakdown`;
+    document.getElementById('t-im-count').innerText = filtered.length; document.getElementById('t-deal-count').innerText = dC;
+    document.getElementById('t-strat-proj').innerText = spC; document.getElementById('t-total-pts').innerText = tot;
+    document.getElementById('t-max-pts').innerText = tM; document.getElementById('t-deal-pts').innerText = tdP;
+    document.getElementById('t-proj-pts').innerText = tpP; document.getElementById('t-cap-pct').innerText = cap + '%';
+    document.getElementById('t-fill-deals').style.width = (tdP/tM*100)+'%'; document.getElementById('t-fill-projects').style.width = (tpP/tM*100)+'%';
+    document.getElementById('t-risk-total').innerText = `${yR+rR} At-Risk`; document.getElementById('t-risk-breakdown').innerText = `${yR}Y / ${rR}R`;
     document.getElementById('t-past-due-proj').innerText = `${pdC} Past Due Projects`;
 }
 
