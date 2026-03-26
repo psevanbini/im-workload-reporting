@@ -1,437 +1,2477 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8" />
+  <title>ParentSquare IM Dashboard</title>
+
   <title>ParentSquare - Total Team Workload</title>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
+
     :root {
+      /* Official ParentSquare Palette [cite: 110-119] */
+
       --ps-green: #85ad33;
+
       --ps-dark-green: #618025;
+
       --ps-blue: #7bbaf0;
+
       --ps-gold: #f2b001;
+
       --ps-light-green: #e5f1d4;
+
       --ps-light-gray: #f7f8f8;
+
       --ps-dark-gray: #444444;
+
       --ps-red: #d9534f;
+
       --ps-light-red: #f2dede;
     }
 
+
+
     * { box-sizing: border-box; font-family: "Montserrat", Arial, sans-serif; }
+
     body { margin: 0; background: var(--ps-light-gray); color: var(--ps-dark-gray); }
+
     .container { max-width: 1450px; margin: 0 auto; padding: 24px; }
 
+    /* Compact Header aligned with branding [cite: 4-13] */
+
+
     header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; }
-    .logo img { height: 40px; width: auto; } 
+    .logo img { height: 45px; width: auto; } 
+
+    .logo img { height: 40px; width: auto; }
+
     .header-text h1 { color: var(--ps-green); margin: 0; font-size: 24px; font-weight: 700; line-height: 1.2; }
+    .header-text p { margin: 4px 0 0; color: #666; font-size: 16px; font-weight: 600; }
+
+    .tabs { display: flex; gap: 24px; border-bottom: 2px solid #ddd; margin-bottom: 24px; }
+    .tab { padding-bottom: 12px; cursor: pointer; font-weight: 600; color: #666; position: relative; }
+    .tab.active { color: var(--ps-green); border-bottom: 4px solid var(--ps-green); }
+
+    /* Summary Cards */
 
     .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--ps-green); min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
+    .card .main-val { font-size: 24px; font-weight: 700; color: var(--ps-dark-green); }
+    .card .sub-val { font-size: 14px; font-weight: 600; color: #777; margin-top: 4px; }
+    .card .label { font-size: 11px; color: #888; text-transform: uppercase; font-weight: 700; margin-top: 8px; }
+
+    /* Capacity Bar */
+    .summary-cap-bar { height: 10px; background: #eee; border-radius: 5px; margin-top: 12px; overflow: hidden; display: flex; }
     .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--ps-green); min-height: 130px; display: flex; flex-direction: column; justify-content: center; }
+
     .card .main-val { font-size: 22px; font-weight: 700; color: var(--ps-dark-green); }
+
     .card .sub-val { font-size: 13px; font-weight: 600; color: #777; margin-top: 4px; }
+
     .card .label { font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700; margin-top: 8px; }
 
+
+
     .summary-cap-bar { height: 8px; background: #eee; border-radius: 4px; margin-top: 10px; overflow: hidden; display: flex; }
+
     .cap-fill-deals { height: 100%; background: var(--ps-green); transition: width 0.5s; }
+
     .cap-fill-projects { height: 100%; background: var(--ps-blue); transition: width 0.5s; }
 
+    .section-header { color: var(--ps-dark-green); font-size: 18px; font-weight: 700; margin: 30px 0 15px 0; }
+
+    table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #ddd; border-radius: 8px; overflow: visible; margin-bottom: 30px; }
+    th { background: var(--ps-green); color: white; padding: 14px; text-align: left; font-size: 11px; text-transform: uppercase; font-weight: 700; }
+    td { padding: 12px; border-bottom: 1px solid #eee; font-size: 12px; vertical-align: middle; }
+    
+    .stage-group-header { background: var(--ps-light-green); font-weight: 700; color: var(--ps-dark-green); padding: 8px 12px; font-size: 11px; text-transform: uppercase; }
+    .stage-spacer { height: 15px; background: var(--ps-light-gray); }
+
+    .pill { padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; display: inline-block; text-transform: capitalize; border: 1px solid transparent; }
+    .red { background: #f2dede; color: #a94442; border-color: #ebccd1; }
+    .yellow { background: #fcf8e3; color: #8a6d3b; border-color: #faebcc; }
+    .green { background: #dff0d8; color: #3c763d; border-color: #d6e9c6; }
     .sub-tabs { display: flex; gap: 24px; border-bottom: 2px solid #ddd; margin-bottom: 24px; }
+
+    .adj-wrapper { position: relative; }
+    .adj-btn { background: #fff; border: 1px solid #ccc; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 11px; display: flex; justify-content: space-between; width: 100px; margin-bottom: 5px; }
+    /* Adjustment Stacking vertically */
+    .adj-display { display: flex; flex-direction: column; gap: 4px; font-size: 10px; font-weight: 600; color: var(--ps-blue); }
+    .adj-dropdown { display: none; position: absolute; left: 0; background: white; border: 1px solid #ddd; padding: 10px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 220px; border-radius: 4px; }
+    .adj-dropdown.active { display: block; }
     .sub-tab { padding-bottom: 12px; cursor: pointer; font-weight: 600; color: #666; font-size: 13px; position: relative; display: flex; align-items: center; }
+
     .sub-tab.active { color: var(--ps-green); border-bottom: 4px solid var(--ps-green); }
+
+
 
     .tab-badge { background: var(--ps-red); color: white; border-radius: 10px; padding: 2px 6px; font-size: 9px; margin-left: 6px; font-weight: 700; display: none; }
 
+
+
     .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; flex-wrap: wrap; }
+
     .control-group { display: flex; align-items: center; gap: 8px; }
+
     .btn-action { background: white; border: 1px solid #ddd; padding: 6px 12px; cursor: pointer; font-size: 11px; font-weight: 600; border-radius: 4px; transition: 0.2s; }
+
     .btn-action.active { background: var(--ps-green) !important; color: white !important; border-color: var(--ps-green) !important; }
+
     .btn-sort.active-sort { background: var(--ps-blue); color: white; border-color: var(--ps-blue); }
 
+
+
     table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #eee; font-size: 12px; margin-bottom: 10px; }
+
     th { background: #f9f9f9; color: var(--ps-dark-gray); padding: 10px; text-align: left; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #ddd; }
+
     .sortable-th { cursor: pointer; color: var(--ps-blue); }
+
     td { padding: 10px; border-bottom: 1px solid #eee; vertical-align: middle; }
+
     tbody tr:nth-child(even) { background-color: #fafafa; }
 
+
+
     .im-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; margin-bottom: 25px; }
+
     .im-card { background: white; padding: 15px; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-top: 3px solid var(--ps-green); height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
+
     .im-card h3 { margin: 0; font-size: 13px; color: var(--ps-dark-green); }
+
     .im-card .sub-info { font-size: 9px; color: #888; font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+
     .im-card .stats { font-size: 10.5px; color: #666; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+
+
     .review-card { background: var(--ps-light-green); border-left: 6pt solid var(--ps-green); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+
     .alert-card { background: #fffaf0; border-left: 6pt solid var(--ps-red); padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+
+
+
     .group-header { background: var(--ps-green); color: white; padding: 8px 12px; margin: 20px 0 10px 0; font-weight: 700; font-size: 11px; text-transform: uppercase; border-radius: 4px; }
+
+
+
     .section-header { color: var(--ps-dark-green); border-bottom: 2px solid var(--ps-light-green); padding-bottom: 5px; margin: 35px 0 15px 0; font-size: 18px; font-weight: 700; }
 
-    /* --- REPORTING STYLES --- */
-    .reporting-controls { background: white; padding: 20px; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-    .reporting-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
-    .report-widget { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 12px; cursor: grab; }
-    .report-widget h4 { margin: 0 0 25px 0; color: var(--ps-dark-gray); font-size: 14px; border-left: 4px solid var(--ps-blue); padding-left: 10px; cursor: move; }
+    .subtle-help {
+      font-size: 11px;
+      color: #6b6b6b;
+      margin-top: 4px;
+    }
 
-    .chart-layout { display: flex; gap: 0; height: 400px; width: 100%; position: relative; }
-    .y-axis { width: 45px; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 85px; border-right: 2px solid #ddd; text-align: right; padding-right: 12px; font-size: 10px; color: #888; font-weight: 700; }
-    .chart-scroll-container { flex: 1; overflow-x: auto; display: flex; align-items: flex-end; padding-bottom: 85px; position: relative; gap: 25px; padding-left: 15px; }
-    
-    .bar-wrapper { min-width: 65px; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; }
-    .bar-stack { width: 34px; display: flex; flex-direction: column-reverse; transition: 0.3s; position: relative; z-index: 1; }
-    .bar-segment-deal { background: var(--ps-green); width: 100%; border-top: 1px solid rgba(255,255,255,0.3); }
-    .bar-segment-proj { background: var(--ps-blue); width: 100%; border-top: 1px solid rgba(255,255,255,0.3); }
-    .mpc-outline { position: absolute; bottom: 0; width: 42px; border: 2px dashed #888; z-index: 2; pointer-events: none; left: -4px; border-bottom: none; }
-    .bar-label { position: absolute; bottom: -80px; transform: rotate(-45deg); font-size: 9px; white-space: nowrap; text-align: right; width: 130px; right: -45px; font-weight: 700; color: #555; }
-    
-    .grid-lines { position: absolute; top: 0; left: 45px; right: 0; bottom: 85px; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
-    .grid-line { width: 100%; border-top: 1px solid rgba(0,0,0,0.05); }
+    .reporting-shell {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .reporting-controls {
+      background: white;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .reporting-controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .report-control {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .report-control label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #777;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .report-control select,
+    .report-control input[type="date"],
+    .report-control input[type="month"] {
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      font-size: 11px;
+      padding: 6px 8px;
+      background: #fff;
+      width: 100%;
+    }
+
+    .report-control .inline {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .report-mode-option {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      padding: 2px 0;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .reporting-meta {
+      margin-top: 10px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .report-note {
+      background: #fff8e8;
+      color: #7f6130;
+      border: 1px solid #f3e2bd;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .drill-path {
+      background: #eef7df;
+      color: #4b6520;
+      border: 1px solid #cfe3a4;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .chart-library {
+      background: white;
+      border: 1px dashed #cfcfcf;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      min-height: 48px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #d7d7d7;
+      border-radius: 14px;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 600;
+      background: #fafafa;
+    }
+
+    .chip button {
+      border: none;
+      background: var(--ps-green);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 9px;
+      padding: 2px 6px;
+      cursor: pointer;
+    }
+
+    .reporting-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 12px;
+    }
+
+    .report-card {
+      background: white;
+      border: 1px solid #e7e7e7;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      resize: both;
+      overflow: auto;
+      min-height: 300px;
+      min-width: 360px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .report-card.dragging {
+      opacity: 0.55;
+    }
+
+    .report-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 10px;
+      border-bottom: 1px solid #efefef;
+      cursor: move;
+      background: #fcfcfc;
+    }
+
+    .report-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .drag-handle {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .report-card-head h4 {
+      margin: 0;
+      font-size: 12px;
+      color: #496620;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .report-card-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .report-mini-btn {
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #666;
+      border-radius: 4px;
+      font-size: 10px;
+      padding: 3px 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .report-card-body {
+      position: relative;
+      flex: 1;
+      min-height: 230px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .report-card-body svg {
+      width: 100%;
+      height: calc(100% - 22px);
+      min-height: 210px;
+      display: block;
+      background: #fff;
+    }
+
+    .chart-footnote {
+      font-size: 10px;
+      color: #777;
+    }
+
+    .projection-module {
+      height: calc(100% - 22px);
+      overflow: auto;
+      padding: 6px;
+      border: 1px solid #ededed;
+      border-radius: 6px;
+      background: #fbfbfb;
+    }
+
+    .projection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .projection-block {
+      background: #fff;
+      border: 1px solid #e3e3e3;
+      border-radius: 6px;
+      padding: 8px;
+    }
+
+    .projection-block .k {
+      font-size: 9px;
+      color: #888;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .projection-block .v {
+      margin-top: 4px;
+      font-size: 16px;
+      color: #4b6620;
+      font-weight: 700;
+    }
+
+    .projection-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+      background: #fff;
+      border: 1px solid #ebebeb;
+    }
+
+    .projection-table th,
+    .projection-table td {
+      padding: 6px;
+      border-bottom: 1px solid #efefef;
+      text-align: left;
+    }
+
+    .projection-table th {
+      background: #f8f8f8;
+      font-size: 9px;
+    }
+
+    .rep-tooltip {
+      position: fixed;
+      pointer-events: none;
+      display: none;
+      background: rgba(34, 34, 34, 0.95);
+      color: #fff;
+      border-radius: 4px;
+      font-size: 10px;
+      line-height: 1.3;
+      padding: 6px 8px;
+      z-index: 3000;
+      max-width: 260px;
+      white-space: pre-line;
+    }
+
+    .chart-clickable {
+      cursor: pointer;
+    }
+
+    .chart-grid-line {
+      stroke: #ececec;
+      stroke-width: 1;
+    }
+
+    .chart-axis {
+      stroke: #bfbfbf;
+      stroke-width: 1;
+    }
+
+    @media (max-width: 960px) {
+      .reporting-grid {
+        grid-template-columns: 1fr;
+      }
+      .report-card {
+        min-width: 320px;
+      }
+    }
 
     footer { text-align: center; padding: 40px; color: var(--ps-dark-gray); font-size: 10px; font-weight: 600; }
+
   </style>
+
 </head>
-<body onload="initApp()">
+
+<body>
+
+
 
 <div class="container">
+
   <header>
+    <div class="logo"><img src="logo.png" alt="ParentSquare Logo"></div>
+
     <div class="logo"><img src="logo.png" alt="ParentSquare"></div>
+
     <div class="header-text">
+      <h1>Implementation Manager Dashboard</h1>
+      <p>My Workload & Assignments</p>
+
       <h1>Total Team Workload</h1>
+
     </div>
+
   </header>
 
-  <div class="summary">
-    <div class="card">
-        <div class="main-val"><span id="t-im-count">0</span> Total IMs</div>
-        <div class="sub-val"><span id="t-deal-count">0</span> Implementation Deals</div>
-        <div class="sub-val" style="margin-top:0;"><span id="t-strat-proj">0</span> Strategic Projects</div>
-    </div>
-    <div class="card">
-        <div class="main-val"><span id="t-total-pts">0</span> / <span id="t-max-pts">0</span> Total Points</div>
-        <div class="sub-val"><span id="t-deal-pts">0</span> Deal Points</div>
-        <div class="sub-val" style="margin-top:0;"><span id="t-proj-pts">0</span> Project Points</div>
-    </div>
-    <div class="card">
-        <div id="t-cap-pct" class="main-val">0%</div>
-        <div class="summary-cap-bar">
-            <div id="t-fill-deals" class="cap-fill-deals"></div>
-            <div id="t-fill-projects" class="cap-fill-projects"></div>
-        </div>
-        <div class="label">Total Team Capacity</div>
-    </div>
-    <div class="card">
-        <div style="background-color: var(--ps-light-red); padding: 4px 8px; border-radius: 4px; display: inline-block; width: fit-content;">
-            <div id="t-risk-total" class="main-val" style="font-size: 18px;">0 At-Risk Deals</div>
-        </div>
-        <div id="t-risk-breakdown" class="sub-val" style="border-top: none; color: var(--ps-dark-gray);">0Y / 0R Health Breakdown</div>
-        <div id="t-past-due-proj" class="sub-val">0 Past Due Projects</div>
-    </div>
+  <div class="tabs">
+    <div id="tab-my" class="tab active">My Workload</div>
   </div>
+
+
+  <div class="summary">
+
+    <div class="card">
+        <div class="main-val"><span id="stat-deals-count">0</span> Deals</div>
+        <div class="sub-val"><span id="stat-projects-count">0</span> Projects</div>
+
+        <div class="main-val"><span id="t-im-count">0</span> Total IMs</div>
+
+        <div class="sub-val"><span id="t-deal-count">0</span> Implementation Deals</div>
+
+        <div class="sub-val" style="margin-top:0;"><span id="t-strat-proj">0</span> Strategic Projects</div>
+
+    </div>
+
+    <div class="card">
+        <div class="main-val"><span id="stat-total-pts">0</span> / 120</div>
+        <div class="label" style="margin-top: 0; margin-bottom: 8px;">Total Points</div>
+        <div class="sub-val"><span id="stat-deal-pts">0</span> Deal Pts</div>
+        <div class="sub-val" style="margin-top: 0;"><span id="stat-proj-pts">0</span> Project Pts</div>
+
+        <div class="main-val"><span id="t-total-pts">0</span> / <span id="t-max-pts">0</span> Total Points</div>
+
+        <div class="sub-val"><span id="t-deal-pts">0</span> Deal Points</div>
+
+        <div class="sub-val" style="margin-top:0;"><span id="t-proj-pts">0</span> Project Points</div>
+
+    </div>
+
+    <div class="card">
+        <div id="stat-cap-pct" class="main-val">0%</div>
+
+        <div id="t-cap-pct" class="main-val">0%</div>
+
+        <div class="summary-cap-bar">
+            <div id="fill-deals" class="cap-fill-deals"></div>
+            <div id="fill-projects" class="cap-fill-projects"></div>
+
+            <div id="t-fill-deals" class="cap-fill-deals"></div>
+
+            <div id="t-fill-projects" class="cap-fill-projects"></div>
+
+        </div>
+        <div class="label">Capacity Used (T3)</div>
+
+        <div class="label">Total Team Capacity</div>
+
+    </div>
+
+    <div class="card">
+        <div style="background-color: var(--ps-light-red); padding: 4px 10px; border-radius: 4px; display: inline-block; width: fit-content;">
+            <div id="stat-risk-total" class="main-val" style="font-size: 20px;">0 At-Risk Deals</div>
+
+        <div style="background-color: var(--ps-light-red); padding: 4px 8px; border-radius: 4px; display: inline-block; width: fit-content;">
+
+            <div id="t-risk-total" class="main-val" style="font-size: 18px;">0 At-Risk Deals</div>
+
+        </div>
+        <div id="stat-risk-breakdown" class="sub-val" style="border-top: none; color: var(--ps-dark-gray);">0Y / 0R Breakdown</div>
+        <div id="stat-past-due-proj" class="sub-val">0 Past Due Projects</div>
+
+        <div id="t-risk-breakdown" class="sub-val" style="border-top: none; color: var(--ps-dark-gray);">0Y / 0R Health Breakdown</div>
+
+        <div id="t-past-due-proj" class="sub-val">0 Past Due Projects</div>
+
+    </div>
+
+  </div>
+
+  <div id="view-my-book" class="view active">
+    <div class="section-header">Implementation Deals</div>
+    <table>
+      <thead><tr><th>Stage</th><th>Customer</th><th>Size</th><th>SIS</th><th>Health</th><th>Adjustments</th><th>Total Points</th></tr></thead>
+      <tbody id="my-deals-body"></tbody>
+    </table>
+
+    <div class="section-header">Strategic Projects</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Project Name</th>
+                <th>Role</th>
+                <th>Type</th>
+                <th>Complexity</th>
+                <th>End Date</th>
+                <th>Total Points</th>
+            </tr>
+        </thead>
+        <tbody id="my-projects-body"></tbody>
+    </table>
 
   <div class="sub-tabs">
+
     <div id="tab-roster" class="sub-tab active" onclick="switchSubTab('roster')">Full Team Roster</div>
+
     <div id="tab-assignment" class="sub-tab" onclick="switchSubTab('assignment')">
+
         Deal Assignment Review <span id="assignment-badge" class="tab-badge">0</span>
+
     </div>
+
     <div id="tab-reporting" class="sub-tab" onclick="switchSubTab('reporting')">Reporting</div>
+
   </div>
+
+  <footer>© 2026 ParentSquare • Implementation Manager Dashboard</footer>
+
 
   <div class="controls" style="margin-bottom: 25px; border-bottom: 1px solid #ddd; padding-bottom: 15px;">
+
     <div class="control-group">
-      <span style="font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase;">Global View:</span>
-      <button class="btn-action filter-tz active" onclick="setGlobalTZ('all', this)">All Regions</button>
-      <button class="btn-action filter-tz" onclick="setGlobalTZ('EST', this)">EST</button>
-      <button class="btn-action filter-tz" onclick="setGlobalTZ('CST', this)">CST</button>
-      <button class="btn-action filter-tz" onclick="setGlobalTZ('PST', this)">PST</button>
+
+      <span style="font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase;">Regional View:</span>
+
+      <button class="btn-action filter-tz active" onclick="setTZFilter('all', this)">All Regions</button>
+
+      <button class="btn-action filter-tz" onclick="setTZFilter('EST', this)">EST</button>
+
+      <button class="btn-action filter-tz" onclick="setTZFilter('CST', this)">CST</button>
+
+      <button class="btn-action filter-tz" onclick="setTZFilter('PST', this)">PST</button>
+
     </div>
+
   </div>
+
+
 
   <div id="view-roster" class="tab-content">
+
     <div class="controls">
+
       <div class="control-group">
+
         <button id="btn-list" class="btn-action active" onclick="switchLayout('list')">List View</button>
+
         <button id="btn-card" class="btn-action" onclick="switchLayout('card')">Card View</button>
+
       </div>
+
       <div class="control-group">
+
         <button id="sort-tier" class="btn-action btn-sort active-sort" onclick="setSort('tier')">Tier ↑↓</button>
+
         <button id="sort-cap" class="btn-action btn-sort" onclick="setSort('cap')">% Cap ↑↓</button>
+
       </div>
+
     </div>
+
     <div id="team-display"></div>
+
   </div>
+
+
 
   <div id="view-assignment" class="tab-content" style="display:none;">
+
     <div class="section-header">New Deal Queue</div>
+
     <div id="deal-queue-container"></div>
+
+
+
     <div class="section-header">Rotation Removal Alerts</div>
+
     <div id="alerts-container"></div>
+
+
+
     <div class="section-header">Manual Rotation Removal</div>
+
     <div style="background:white; padding:20px; border-radius:8px; border:1px solid #ddd; display:flex; gap:15px; align-items:center; margin-bottom: 30px;">
+
         <label style="font-size:12px; font-weight:700;">Select IM:</label>
+
         <select id="manual-im-select" style="padding:6px; font-size:12px; width: 250px;"></select>
+
         <button class="btn-action active" onclick="triggerManualRemoval()">Remove from Rotation</button>
+
     </div>
+
+
+
     <div class="section-header">IM Account Eligibility</div>
+
     <div id="eligibility-container"></div>
+
   </div>
+
+
 
   <div id="view-reporting" class="tab-content" style="display:none;">
-    <div class="reporting-controls">
-        <div style="display:flex; justify-content:space-between; width:100%; align-items:flex-end;">
-            <div style="display:flex; gap:30px;">
-                <div>
-                    <span style="font-size:10px; font-weight:700; color:#888;">SEASON / QUARTER:</span><br>
-                    <select id="report-range" style="padding:5px; font-size:11px; margin-top:5px; width:180px;">
-                        <option value="year">Current Year</option>
-                        <option value="bts">BTS (Apr-Sept)</option>
-                        <option value="q4_26" selected>FY26 Q4 (Jun-Aug)</option>
-                        <option value="q3_26">FY26 Q3 (Mar-May)</option>
-                        <option value="q2_26">FY26 Q2 (Dec-Feb)</option>
-                        <option value="q4_25">FY25 Q4 (Jun-Aug)</option>
-                    </select>
-                </div>
-                <div>
-                    <span style="font-size:10px; font-weight:700; color:#888;">CUSTOM RANGE:</span><br>
-                    <div style="margin-top:5px; display:flex; align-items:center; gap:5px;">
-                        <input type="date" class="btn-action" style="padding:3px;"> to <input type="date" class="btn-action" style="padding:3px;">
-                    </div>
-                </div>
+
+    <div class="reporting-shell">
+      <div class="reporting-controls">
+        <div class="reporting-controls-grid">
+          <div class="report-control">
+            <label>Date Range Preset</label>
+            <select id="rep-range-mode">
+              <option value="month">Month</option>
+              <option value="year" selected>Year</option>
+              <option value="bts">BTS Season (Apr-Sep)</option>
+              <option value="q1">Q1 (Sep-Nov)</option>
+              <option value="q2">Q2 (Dec-Feb)</option>
+              <option value="q3">Q3 (Mar-May)</option>
+              <option value="q4">Q4 (Jun-Aug)</option>
+              <option value="custom">Custom Range</option>
+            </select>
+          </div>
+
+          <div class="report-control">
+            <label>Range Year / Fiscal Anchor</label>
+            <select id="rep-year"></select>
+          </div>
+
+          <div class="report-control">
+            <label>Anchor Month (for Month preset)</label>
+            <input id="rep-month-anchor" type="month" />
+          </div>
+
+          <div class="report-control">
+            <label>Historical Comparison</label>
+            <div class="inline">
+              <label class="report-mode-option"><input id="rep-compare-enabled" type="checkbox" checked> Enable YoY</label>
+              <select id="rep-compare-year"></select>
             </div>
-            <div style="text-align:right;">
-                <span style="font-size:10px; font-weight:700; color:#888;">POINT TYPES:</span><br>
-                <div style="margin-top:5px;">
-                    <label style="font-size:11px;"><input type="checkbox" id="inc-deals" checked onchange="renderReporting()"> Deal Pts</label>
-                    <label style="font-size:11px; margin-left:15px;"><input type="checkbox" id="inc-projs" checked onchange="renderReporting()"> Project Pts</label>
-                    <button class="btn-action" style="margin-left:25px; font-size:9px;" onclick="resetLayout()">Reset Layout</button>
-                </div>
+          </div>
+
+          <div id="rep-custom-start-wrap" class="report-control" style="display:none;">
+            <label>Custom Start Date</label>
+            <input id="rep-custom-start" type="date" />
+          </div>
+
+          <div id="rep-custom-end-wrap" class="report-control" style="display:none;">
+            <label>Custom End Date</label>
+            <input id="rep-custom-end" type="date" />
+          </div>
+
+          <div class="report-control">
+            <label>Point Type</label>
+            <div class="inline">
+              <label class="report-mode-option"><input id="rep-mode-deal" type="checkbox"> Deal Points</label>
+              <label class="report-mode-option"><input id="rep-mode-project" type="checkbox"> Project Points</label>
+              <label class="report-mode-option"><input id="rep-mode-both" type="checkbox" checked> Both</label>
             </div>
+          </div>
+
+          <div class="report-control">
+            <label>Territory / Time Zone</label>
+            <select id="rep-territory">
+              <option value="ALL">ALL</option>
+              <option value="EST">EST</option>
+              <option value="CST">CST</option>
+              <option value="MST">MST</option>
+              <option value="PST">PST</option>
+            </select>
+          </div>
+
+          <div class="report-control">
+            <label>Tier</label>
+            <select id="rep-tier">
+              <option value="ALL">ALL</option>
+              <option value="T1">T1</option>
+              <option value="T2">T2</option>
+              <option value="T3">T3</option>
+              <option value="T4">T4</option>
+            </select>
+          </div>
+
+          <div class="report-control">
+            <label>Individual IM (multi-select)</label>
+            <select id="rep-im-select" multiple size="4"></select>
+          </div>
+
+          <div class="report-control">
+            <label>Actions</label>
+            <div class="inline">
+              <button class="btn-action" id="rep-reset-filters">Reset Filters</button>
+              <button class="btn-action" id="rep-reset-layout">Reset Layout</button>
+            </div>
+          </div>
         </div>
+
+        <div class="reporting-meta">
+          <div id="rep-data-note" class="report-note" style="display:none;"></div>
+          <div id="rep-drill-path" class="drill-path">Drill Path: Team</div>
+        </div>
+        <div class="subtle-help">Interactive behavior: click territory bars to filter territory, click individual bars to drill to IM, and hover any mark for detailed tooltips.</div>
+      </div>
+
+      <div>
+        <div style="font-size:10px; font-weight:700; text-transform:uppercase; color:#777; margin-bottom:6px;">Removed Charts</div>
+        <div id="rep-chart-library" class="chart-library"></div>
+      </div>
+
+      <div id="rep-dashboard" class="reporting-grid"></div>
     </div>
 
-    <div class="reporting-grid" id="reporting-grid">
-        <div class="report-widget" draggable="true" id="widget-indiv" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h4 style="margin:0;">Individual Workload Analysis (T1 → T4)</h4>
-                <select id="report-tz-filter" style="padding:4px; font-size:10px; font-weight:700;" onchange="renderReporting()">
-                    <option value="all">ALL TERRITORIES</option>
-                    <option value="EST">EST ONLY</option>
-                    <option value="CST">CST ONLY</option>
-                    <option value="PST">PST ONLY</option>
-                </select>
-            </div>
-            <div class="chart-layout">
-                <div class="y-axis" id="y-axis-indiv"></div>
-                <div class="grid-lines" id="grid-indiv"></div>
-                <div class="chart-scroll-container" id="chart-indiv"></div>
-            </div>
-        </div>
-
-        <div class="report-widget" draggable="true" id="widget-terri" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)">
-            <h4>Territory Capacity Comparison</h4>
-            <div class="chart-layout">
-                <div class="y-axis" id="y-axis-terri"></div>
-                <div class="grid-lines" id="grid-terri"></div>
-                <div class="chart-scroll-container" id="chart-terri"></div>
-            </div>
-        </div>
-    </div>
   </div>
 
-  <footer>© 2026 ParentSquare • Total Team Workload Dashboard</footer>
+
+
+  <footer>© 2026 ParentSquare • Total Team Workload</footer>
+
 </div>
 
+<div id="rep-tooltip" class="rep-tooltip"></div>
+
 <script>
+
 const MPC_VALUES = { "T1": 70, "T2": 90, "T3": 120, "T4": 120, "T5": 90 };
-const SIZE_PTS = { "Strategic": 4, "Large": 2, "Medium": 3, "Small": 1 };
 const SIS_PTS = { "PowerSchool": 3, "Infinite Campus": 2, "Aeries": 2, "Skyward SFTP": 2, "Clever": 2, "RenWeb/FACTS": 1 };
+
+const SIZE_PTS = { "Strategic": 4, "Large": 2, "Medium": 3, "Small": 1 };
+const HEALTH_PTS = { "green": 0, "yellow": 1, "red": 2 };
+const STAGES = ["Inbound", "Kickoff", "Setup", "Feature Enablement", "Platform Ready", "Monitor", "End of Implementation", "On Hold", "Stalled"];
+
+const SIS_PTS = { "PowerSchool": 3, "Infinite Campus": 2, "Aeries": 2, "Skyward SFTP": 2, "Clever": 2, "RenWeb/FACTS": 1 };
+
 const ADJ_OPTIONS = ["Extended Launch", "Proof of Concept", "Pilots", "DSAs/DUAs/DPAs", "DOEs", "New Hire"];
+
+const ROLE_PTS = { "Lead": 3, "Contributor": 1 };
+const TYPE_PTS = { "Internal": 1, "Cross-Collaboration": 2 };
+const COMP_PTS = { "Easy": 1, "Medium": 2, "Hard": 3 };
+const STAGES = ["Inbound", "Kickoff", "Setup", "Feature Enablement", "Platform Ready", "Monitor", "End of Implementation", "On Hold", "Stalled"];
+
+let myDeals = Array.from({length: 12}, (_, i) => ({
+    id: i, stage: STAGES[i % STAGES.length], name: `Customer ${String.fromCharCode(65+i)}`, 
+    size: i % 3 === 0 ? "Strategic" : (i % 3 === 1 ? "Medium" : "Large"), 
+    sis: i % 2 === 0 ? "PowerSchool" : "Infinite Campus", 
+    health: i % 4 === 0 ? "yellow" : (i === 11 ? "red" : "green"), 
+    adj: JSON.parse(localStorage.getItem(`adj_my_deal_${i}`)) || []
+}));
+const HEALTH_PTS = { "green": 0, "yellow": 1, "red": 2 };
+
+let myProjects = [
+    { name: "Resource Library Audit", role: "Lead", type: "Internal", complexity: "Medium", endDate: "03/10/2026" },
+    { name: "Support API Sync Project", role: "Contributor", type: "Cross-Collaboration", complexity: "Hard", endDate: "04/05/2026" }
+
 
 let currentLayout = 'list', currentSort = 'tier', currentTZ = 'all', sortDir = 'desc', eligSortDir = 'desc';
 
+
+
 let teamData = [
-  { name: "Alex Rivers", tz: "EST", tier: "T4", dealPts: 85, projPts: 25, deals: 12, projects: 2, pd: 0, y: 1, r: 0, onRotation: true, reason: "" },
-  { name: "Jordan Miller", tz: "EST", tier: "T3", dealPts: 70, projPts: 15, deals: 11, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
-  { name: "Casey Smith", tz: "EST", tier: "T2", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 1, y: 1, r: 0, onRotation: true, reason: "" },
-  { name: "Morgan Lane", tz: "CST", tier: "T1", dealPts: 45, projPts: 15, deals: 9, projects: 2, pd: 0, y: 0, r: 1, onRotation: false, reason: "Velocity Limit" },
-  { name: "Riley West", tz: "CST", tier: "T4", dealPts: 95, projPts: 35, deals: 15, projects: 3, pd: 0, y: 2, r: 1, onRotation: true, reason: "" },
-  { name: "Taylor Brooks", tz: "PST", tier: "T3", dealPts: 85, projPts: 10, deals: 12, projects: 1, pd: 1, y: 1, r: 0, onRotation: true, reason: "" },
-  { name: "Quinn Jones", tz: "PST", tier: "T2", dealPts: 50, projPts: 20, deals: 7, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
-  { name: "Skyler Page", tz: "EST", tier: "T1", dealPts: 45, projPts: 10, deals: 8, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
-  { name: "Dakota Hayes", tz: "CST", tier: "T4", dealPts: 115, projPts: 10, deals: 16, projects: 1, pd: 1, y: 1, r: 2, onRotation: false, reason: "Capacity Overload" },
-  { name: "Jamie Frost", tz: "PST", tier: "T3", dealPts: 65, projPts: 20, deals: 10, projects: 2, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
-  { name: "Peyton Gray", tz: "EST", tier: "T2", dealPts: 60, projPts: 5, deals: 9, projects: 0, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
-  { name: "Reese Dale", tz: "CST", tier: "T1", dealPts: 40, projPts: 15, deals: 8, projects: 3, pd: 1, y: 1, r: 0, onRotation: true, reason: "" },
-  { name: "Charlie King", tz: "PST", tier: "T4", dealPts: 85, projPts: 40, deals: 13, projects: 4, pd: 2, y: 2, r: 0, onRotation: false, reason: "High Velocity" },
-  { name: "Emerson True", tz: "EST", tier: "T3", dealPts: 100, projPts: 10, deals: 14, projects: 1, pd: 0, y: 3, r: 1, onRotation: true, reason: "" },
-  { name: "Sutton Wood", tz: "CST", tier: "T2", dealPts: 65, projPts: 15, deals: 9, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
-  { name: "Blake Vale", tz: "PST", tier: "T1", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
-  { name: "Parker Jade", tz: "CST", tier: "T3", dealPts: 85, projPts: 20, deals: 10, projects: 2, pd: 0, y: 1, r: 0, onRotation: true, reason: "" },
-  { name: "Avery Sky", tz: "PST", tier: "T2", dealPts: 60, projPts: 10, deals: 9, projects: 1, pd: 1, y: 1, r: 0, onRotation: true, reason: "" },
-  { name: "Logan Moss", tz: "EST", tier: "T4", dealPts: 80, projPts: 10, deals: 11, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
-  { name: "Kendall Bell", tz: "CST", tier: "T1", dealPts: 55, projPts: 5, deals: 8, projects: 1, pd: 0, y: 0, r: 0, onRotation: true, reason: "" },
-  { name: "Robin Kite", tz: "PST", tier: "T1", dealPts: 50, projPts: 10, deals: 9, projects: 1, pd: 0, y: 1, r: 0, onRotation: true, reason: "" },
-  { name: "Stevie Lynn", tz: "EST", tier: "T2", dealPts: 65, projPts: 12, deals: 10, projects: 3, pd: 1, y: 1, r: 1, onRotation: true, reason: "" },
-  { name: "River Pond", tz: "CST", tier: "T3", dealPts: 95, projPts: 15, deals: 12, projects: 2, pd: 2, y: 2, r: 1, onRotation: true, reason: "" },
-  { name: "Phoenix Day", tz: "PST", tier: "T4", dealPts: 85, projPts: 15, deals: 11, projects: 2, pd: 1, y: 1, r: 0, onRotation: true, reason: "" }
+
+  { name: "Alex Rivers", tz: "EST", tier: "T4", dealPts: 65, projPts: 15, deals: 10, projects: 2, pd: 0, y: 1, r: 0, velocity: 2, med: true, lg: true, onRotation: true, reason: "" },
+
+  { name: "Jordan Miller", tz: "EST", tier: "T3", dealPts: 75, projPts: 10, deals: 11, projects: 1, pd: 0, y: 0, r: 0, velocity: 3, med: true, lg: true, onRotation: true, reason: "" },
+
+  { name: "Casey Smith", tz: "EST", tier: "T2", dealPts: 55, projPts: 5, deals: 8, projects: 2, pd: 1, y: 1, r: 0, velocity: 1, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "Morgan Lane", tz: "CST", tier: "T1", dealPts: 45, projPts: 10, deals: 9, projects: 2, pd: 0, y: 0, r: 1, velocity: 6, med: true, lg: false, onRotation: false, reason: "Velocity Limit" },
+
+  { name: "Riley West", tz: "CST", tier: "T4", dealPts: 95, projPts: 25, deals: 15, projects: 3, pd: 0, y: 2, r: 1, velocity: 4, med: true, lg: true, onRotation: true, reason: "" },
+
+  { name: "Taylor Brooks", tz: "PST", tier: "T3", dealPts: 85, projPts: 10, deals: 12, projects: 1, pd: 1, y: 1, r: 0, velocity: 3, med: true, lg: true, onRotation: true, reason: "" },
+
+  { name: "Quinn Jones", tz: "PST", tier: "T2", dealPts: 50, projPts: 10, deals: 7, projects: 1, pd: 0, y: 0, r: 0, velocity: 2, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "Skyler Page", tz: "EST", tier: "T4", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 0, y: 0, r: 0, velocity: 1, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "Dakota Hayes", tz: "CST", tier: "T4", dealPts: 115, projPts: 10, deals: 16, projects: 1, pd: 1, y: 1, r: 2, velocity: 4, med: true, lg: true, onRotation: false, reason: "Capacity Overload" },
+
+  { name: "Jamie Frost", tz: "PST", tier: "T3", dealPts: 65, projPts: 20, deals: 10, projects: 2, pd: 0, y: 0, r: 0, velocity: 2, med: true, lg: true, onRotation: true, reason: "" },
+
+  { name: "Peyton Gray", tz: "EST", tier: "T2", dealPts: 60, projPts: 5, deals: 9, projects: 0, pd: 0, y: 0, r: 0, velocity: 1, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "Reese Dale", tz: "CST", tier: "T1", dealPts: 45, projPts: 15, deals: 8, projects: 3, pd: 1, y: 1, r: 0, velocity: 3, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "Charlie King", tz: "PST", tier: "T4", dealPts: 85, projPts: 40, deals: 13, projects: 4, pd: 2, y: 2, r: 0, velocity: 7, med: true, lg: true, onRotation: false, reason: "High Velocity" },
+
+  { name: "Emerson True", tz: "EST", tier: "T3", dealPts: 100, projPts: 10, deals: 14, projects: 1, pd: 0, y: 3, r: 1, velocity: 3, med: true, lg: true, onRotation: true, reason: "" },
+
+  { name: "Sutton Wood", tz: "CST", tier: "T2", dealPts: 65, projPts: 5, deals: 9, projects: 1, pd: 0, y: 0, r: 0, velocity: 2, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "Blake Vale", tz: "PST", tier: "T1", dealPts: 55, projPts: 10, deals: 8, projects: 2, pd: 0, y: 0, r: 0, velocity: 4, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "Parker Jade", tz: "CST", tier: "T3", dealPts: 75, projPts: 15, deals: 10, projects: 2, pd: 0, y: 1, r: 0, velocity: 2, med: true, lg: true, onRotation: true, reason: "" },
+
+  { name: "Avery Sky", tz: "PST", tier: "T2", dealPts: 60, projPts: 10, deals: 9, projects: 1, pd: 1, y: 1, r: 0, velocity: 1, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "Logan Moss", tz: "EST", tier: "T4", dealPts: 80, projPts: 5, deals: 11, projects: 1, pd: 0, y: 0, r: 0, velocity: 2, med: true, lg: true, onRotation: true, reason: "" },
+
+  { name: "Kendall Bell", tz: "CST", tier: "T4", dealPts: 55, projPts: 20, deals: 8, projects: 4, pd: 0, y: 0, r: 0, velocity: 1, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "Robin Kite", tz: "PST", tier: "T1", dealPts: 50, projPts: 5, deals: 9, projects: 1, pd: 0, y: 1, r: 0, velocity: 2, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "Stevie Lynn", tz: "EST", tier: "T2", dealPts: 65, projPts: 12, deals: 10, projects: 3, pd: 1, y: 1, r: 1, velocity: 3, med: true, lg: false, onRotation: true, reason: "" },
+
+  { name: "River Pond", tz: "CST", tier: "T3", dealPts: 95, projPts: 15, deals: 12, projects: 2, pd: 2, y: 2, r: 1, velocity: 5, med: true, lg: true, onRotation: true, reason: "" },
+
+  { name: "Phoenix Day", tz: "PST", tier: "T4", dealPts: 85, projPts: 15, deals: 11, projects: 2, pd: 1, y: 1, r: 0, velocity: 2, med: true, lg: true, onRotation: true, reason: "" }
+
 ];
+
+function calculateProjectPoints(p) {
+    return ROLE_PTS[p.role] + TYPE_PTS[p.type] + COMP_PTS[p.complexity];
+
 
 let dealQueue = [{ id: 901, name: "Mountain View USD", size: "Large", sis: "Infinite Campus", tz: "PST", adj: [] }];
 
-function renderReporting() {
-    const showDeals = document.getElementById('inc-deals').checked;
-    const showProjs = document.getElementById('inc-projs').checked;
-    const localTZ = document.getElementById('report-tz-filter').value;
+function switchSubTab(tab) {
 
-    const axisValues = [160, 140, 120, 100, 80, 60, 40, 20, 0];
-    const axisHTML = axisValues.map(v => `<span>${v}</span>`).join('');
-    const gridHTML = axisValues.map(() => `<div class="grid-line"></div>`).join('');
-    document.getElementById('y-axis-indiv').innerHTML = axisHTML;
-    document.getElementById('grid-indiv').innerHTML = gridHTML;
-    document.getElementById('y-axis-terri').innerHTML = axisHTML;
-    document.getElementById('grid-terri').innerHTML = gridHTML;
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
 
-    // 1. Individual Chart (T1 to T4)
-    const indBody = document.getElementById('chart-indiv'); indBody.innerHTML = '';
-    const filteredIndiv = localTZ === 'all' ? teamData : teamData.filter(i => i.tz === localTZ);
-    const sorted = [...filteredIndiv].sort((a,b) => a.tier.localeCompare(b.tier));
-    
-    sorted.forEach(im => {
-        const mpc = MPC_VALUES[im.tier], dP = showDeals ? im.dealPts : 0, pP = showProjs ? im.projPts : 0, hScale = 1.95;
-        const w = document.createElement('div'); w.className = 'bar-wrapper';
-        w.innerHTML = `
-            <div class="bar-stack" style="height:${Math.max(dP+pP, mpc)*hScale}px;">
-                <div class="bar-segment-deal" style="height:${dP*hScale}px"></div>
-                <div class="bar-segment-proj" style="height:${pP*hScale}px"></div>
-                <div class="mpc-outline" style="height:${mpc*hScale}px;"></div>
-            </div>
-            <div class="bar-label">${im.name} (${im.tz}) [${im.tier}]</div>`;
-        indBody.appendChild(w);
-    });
+    document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
 
-    // 2. Territory Comparison
-    const terBody = document.getElementById('chart-terri'); terBody.innerHTML = '';
-    ["EST", "CST", "PST"].forEach(region => {
-        const ims = teamData.filter(i => i.tz === region);
-        let rd=0, rp=0, rm=0; ims.forEach(i => { rd+=i.dealPts; rp+=i.projPts; rm+=MPC_VALUES[i.tier]; });
-        const avgD = rd/ims.length, avgP = rp/ims.length, avgM = rm/ims.length, hScale = 1.95;
-        const w = document.createElement('div'); w.className = 'bar-wrapper'; w.style.minWidth = "150px";
-        w.innerHTML = `
-            <div class="bar-stack" style="height:${Math.max(avgD+avgP, avgM)*hScale}px; width:60px;">
-                <div class="bar-segment-deal" style="height:${avgD*hScale}px"></div>
-                <div class="bar-segment-proj" style="height:${avgP*hScale}px"></div>
-                <div class="mpc-outline" style="height:${avgM*hScale}px; width:66px; left:-3px;"></div>
-            </div>
-            <div class="bar-label" style="bottom:-30px; transform:none; right:auto; width:auto; font-size:12px;">${region} Region (Avg)</div>`;
-        terBody.appendChild(w);
-    });
-}
+    document.getElementById('view-' + tab).style.display = 'block';
 
-// Drag & App Core (LOCKED)
-function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
-function allowDrop(ev) { ev.preventDefault(); }
-function drop(ev) {
-    ev.preventDefault();
-    const data = ev.dataTransfer.getData("text");
-    const target = ev.target.closest('.report-widget');
-    if (target && target.id !== data) {
-        const grid = document.getElementById('reporting-grid');
-        grid.insertBefore(document.getElementById(data), target);
-        localStorage.setItem('rep_layout', JSON.stringify(Array.from(document.querySelectorAll('.report-widget')).map(w => w.id)));
+    document.getElementById('tab-' + tab).classList.add('active');
+
+    renderContent();
+
+    if (tab === 'reporting') {
+      renderReportingDashboard(true);
     }
 }
-function resetLayout() { localStorage.removeItem('rep_layout'); location.reload(); }
-function initApp() { 
-    updateMetrics(); renderContent(); 
-    const order = JSON.parse(localStorage.getItem('rep_layout'));
-    if (order) order.forEach(id => document.getElementById('reporting-grid').appendChild(document.getElementById(id)));
+
+function updateBadge() {
+
+    const alerts = teamData.filter(im => !im.onRotation).length;
+
+    const total = dealQueue.length + alerts;
+
+    const badge = document.getElementById('assignment-badge');
+
+    badge.innerText = total;
+
+    badge.style.display = total > 0 ? 'inline-block' : 'none';
+
 }
-function switchSubTab(tab) {
-    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-    document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('view-' + tab).style.display = 'block';
-    document.getElementById('tab-' + tab).classList.add('active');
-    if (tab === 'reporting') renderReporting();
-}
-function setGlobalTZ(tz, btn) {
-    currentTZ = tz; document.querySelectorAll('.filter-tz').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active'); updateMetrics(); renderContent();
-    if(document.getElementById('view-reporting').style.display === 'block') renderReporting();
+
+function setTZFilter(tz, btn) {
+
+    currentTZ = tz;
+
+    document.querySelectorAll('.filter-tz').forEach(b => b.classList.remove('active'));
+
+    btn.classList.add('active');
+
+    updateMetrics(); renderContent();
+
 }
 
 function triggerManualRemoval() {
+
     const name = document.getElementById('manual-im-select').value;
-    const reason = prompt(`Reason for removing ${name}:`);
-    if (reason) { const im = teamData.find(i => i.name === name); im.onRotation = false; im.reason = reason; updateBadge(); renderContent(); }
-}
-function resumeIM(name) { const im = teamData.find(i => i.name === name); im.onRotation = true; im.reason = ""; updateBadge(); renderContent(); }
-function toggleEligSort() { eligSortDir = eligSortDir === 'desc' ? 'asc' : 'desc'; renderAssignment(); }
-function updateBadge() {
-    const total = dealQueue.length + teamData.filter(i => !i.onRotation).length;
-    const badge = document.getElementById('assignment-badge'); badge.innerText = total;
-    badge.style.display = total > 0 ? 'inline-block' : 'none';
-}
-function updateQAdj(id, opt) { const d = dealQueue.find(x => x.id === id); const i = d.adj.indexOf(opt); i > -1 ? d.adj.splice(i,1) : d.adj.push(opt); renderAssignment(); }
 
-function renderRoster() {
-    const display = document.getElementById('team-display'); display.innerHTML = '';
-    const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
-    const sorted = [...filtered].sort((a,b) => {
-        let vA = currentSort === 'tier' ? parseInt(a.tier.slice(1)) : (a.dealPts + a.projPts)/MPC_VALUES[a.tier];
-        let vB = currentSort === 'tier' ? parseInt(b.tier.slice(1)) : (b.dealPts + b.projPts)/MPC_VALUES[b.tier];
-        return sortDir === 'desc' ? vB - vA : vA - vB;
-    });
-    let groups = {};
-    sorted.forEach(im => {
-        const pct = Math.round(((im.dealPts+im.projPts)/MPC_VALUES[im.tier])*100);
-        const key = currentSort === 'tier' ? `Tier ${im.tier.slice(1)}` : (pct>=90?"Critical":pct>=80?"High":"Stable");
-        if (!groups[key]) groups[key] = []; groups[key].push(im);
-    });
+    const reason = prompt(`Enter removal reason for ${name}:`);
 
-    Object.keys(groups).forEach(key => {
-        const h = document.createElement('div'); h.className = 'group-header'; h.innerText = key; display.appendChild(h);
-        if (currentLayout === 'list') {
-            const t = document.createElement('table'); t.innerHTML = `<thead><tr><th>TZ</th><th>Name</th><th>Deals (Pts)</th><th>Projs (Pts)</th><th>% Cap</th><th>Risks</th></tr></thead><tbody></tbody>`;
-            const b = t.querySelector('tbody'); display.appendChild(t);
-            groups[key].forEach(im => {
-                const pct = Math.round(((im.dealPts+im.projPts)/MPC_VALUES[im.tier])*100), c = pct >= 90 ? 'var(--ps-red)' : 'var(--ps-dark-gray)';
-                b.innerHTML += `<tr><td><b>${im.tz}</b></td><td><b>${im.name}</b></td><td>${im.deals} (${im.dealPts})</td><td>${im.projects || 0}</td><td style="color:${c}; font-weight:700;">${pct}%</td><td>${im.y}Y/${im.r}R|<b style="${im.pd>0?'color:var(--ps-red)':''}">${im.pd}P</b></td></tr>`;
-            });
-        } else {
-            const grid = document.createElement('div'); grid.className = 'im-grid'; display.appendChild(grid);
-            groups[key].forEach(im => {
-                const m = MPC_VALUES[im.tier], pct = Math.round(((im.dealPts+im.projPts)/m)*100), c = pct >= 90 ? 'var(--ps-red)' : (pct >= 80 ? 'var(--ps-gold)' : 'var(--ps-green)');
-                grid.innerHTML += `<div class="im-card" style="border-top-color:${c}"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><h3>${im.name}</h3><span class="sub-info">${im.tz} • Tier ${im.tier.slice(1)}</span></div><span style="font-weight:700; color:${c}; font-size:12px;">${pct}%</span></div><div class="stats">Pts: <b>${im.dealPts+im.projPts}</b>/${m} | Deals: ${im.deals}<br>Projects past due: <b style="${im.pd > 0 ? 'color:var(--ps-red);' : ''}">${im.pd}</b></div><div class="summary-cap-bar" style="height:6px;"><div style="width:${(im.dealPts/m)*100}%; background:var(--ps-green);"></div><div style="width:${(im.projPts/m)*100}%; background:var(--ps-blue);"></div></div></div>`;
-            });
-        }
-    });
+    if (reason) {
+
+        const im = teamData.find(i => i.name === name);
+
+        if (!im) return;
+        im.onRotation = false; im.reason = reason;
+
+        updateBadge(); renderContent();
+
+    }
+
+}
+
+function resumeIM(name) {
+
+    const im = teamData.find(i => i.name === name);
+    if (!im) return;
+
+    im.onRotation = true; im.reason = "";
+
+    updateBadge(); renderContent();
+
+}
+
+function toggleEligSort() {
+
+    eligSortDir = eligSortDir === 'desc' ? 'asc' : 'desc';
+
+    renderAssignment();
+
 }
 
 function renderAssignment() {
+
     const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
+
     const qContainer = document.getElementById('deal-queue-container');
-    qContainer.innerHTML = dealQueue.map(deal => `<div class="review-card"><div style="display:flex; justify-content:space-between;"><div><h4>${deal.name} (${deal.tz})</h4><p>Base: ${deal.size}</p><div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 5px;">${ADJ_OPTIONS.map(opt => `<label style="font-size:10px;"><input type="checkbox" onchange="updateQAdj(${deal.id},'${opt}')"> ${opt} (+1)</label>`).join('')}</div></div><div style="text-align:right;"><select style="font-size:11px; padding:4px; width:100%;">${filtered.map(im => `<option>${im.name}</option>`).join('')}</select><button class="btn-action active" style="width:100%; margin-top:5px;">Confirm</button></div></div></div>`).join('');
+
+    qContainer.innerHTML = dealQueue.map(deal => {
+
+        const base = (SIZE_PTS[deal.size] || 0) + (SIS_PTS[deal.sis] || 0);
+
+        const total = base + deal.adj.length;
+
+        return `<div class="review-card"><div style="display:flex; justify-content:space-between;">
+
+            <div><h4>${deal.name} (${deal.tz})</h4><p style="font-size:11px; color:#666;">Base: ${deal.size} (${SIZE_PTS[deal.size]}) + ${deal.sis} (${SIS_PTS[deal.sis]})</p>
+
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:5px;">
+
+                ${ADJ_OPTIONS.map(opt => `<label style="font-size:10px;"><input type="checkbox" onchange="updateQAdj(${deal.id},'${opt}')" ${deal.adj.includes(opt)?'checked':''}> ${opt} (+1)</label>`).join('')}
+
+            </div></div>
+
+            <div style="text-align:right;"><div style="font-size:16px; font-weight:700; color:var(--ps-dark-green);">Projected: [${total}]</div>
+
+            <select style="margin:10px 0; padding:4px; font-size:11px; width: 100%;">${filtered.map(im => `<option>${im.name}</option>`).join('')}</select>
+
+            <button class="btn-action active" style="width:100%;">Confirm</button></div>
+
+        </div></div>`;
+
+    }).join('');
+
     const aContainer = document.getElementById('alerts-container');
-    aContainer.innerHTML = filtered.filter(im => !im.onRotation).map(im => `<div class="alert-card"><div style="display:flex; justify-content:space-between; align-items:center;"><div><b>${im.name} (${im.tz})</b> - Reason: ${im.reason}</div><div style="display:flex; gap:10px;"><button class="btn-action" onclick="resumeIM('${im.name}')">Resume</button><input type="date" style="font-size:10px;"></div></div></div>`).join('');
+
+    const flagged = filtered.filter(im => !im.onRotation);
+
+    aContainer.innerHTML = flagged.map(im => `
+
+        <div class="alert-card"><div style="display:flex; justify-content:space-between; align-items:center;">
+
+        <div><b>${im.name} (${im.tz})</b> - Reason: ${im.reason}</div>
+
+        <div style="display:flex; gap:10px;"><button class="btn-action" onclick="resumeIM('${im.name}')">Resume</button><input type="date" style="font-size:10px;"></div>
+
+        </div></div>`).join('');
+
     document.getElementById('manual-im-select').innerHTML = teamData.filter(im => im.onRotation).map(im => `<option value="${im.name}">${im.name} (${im.tz})</option>`).join('');
+
     const eContainer = document.getElementById('eligibility-container');
-    const eligSorted = [...filtered].sort((a,b) => parseInt(a.tier.slice(1)) < parseInt(b.tier.slice(1)) ? 1 : -1);
-    eContainer.innerHTML = `<table><thead><tr><th>Name</th><th class="sortable-th" onclick="toggleEligSort()">Tier ↑↓</th><th>Med</th><th>Lg/Ent</th></tr></thead><tbody>${eligSorted.map(im => `<tr><td><b>${im.name}</b></td><td>${im.tier}</td><td><input type="checkbox" ${im.med?'checked':''}></td><td><input type="checkbox" ${im.lg?'checked':''}></td></tr>`).join('')}</tbody></table>`;
+
+    const eligSorted = [...filtered].sort((a,b) => {
+
+        const vA = parseInt(a.tier.slice(1), 10), vB = parseInt(b.tier.slice(1), 10);
+
+        return eligSortDir === 'desc' ? vB - vA : vA - vB;
+
+    });
+
+    eContainer.innerHTML = `<table><thead><tr><th>Name</th><th class="sortable-th" onclick="toggleEligSort()">Tier ↑↓</th><th>Med</th><th>Lg/Ent</th></tr></thead>
+
+        <tbody>${eligSorted.map(im => `<tr><td><b>${im.name}</b></td><td>${im.tier}</td>
+
+        <td><input type="checkbox" ${im.med?'checked':''}></td>
+
+        <td><input type="checkbox" ${im.lg?'checked':''}></td></tr>`).join('')}</tbody></table>`;
+
 }
+
+function updateQAdj(id, opt) { const d = dealQueue.find(x => x.id === id); if (!d) return; const i = d.adj.indexOf(opt); i > -1 ? d.adj.splice(i,1) : d.adj.push(opt); renderAssignment(); }
 
 function updateMetrics() {
+    let dealPts = 0, yellow = 0, red = 0;
+    myDeals.forEach(d => {
+        dealPts += (SIZE_PTS[d.size] + SIS_PTS[d.sis] + HEALTH_PTS[d.health] + d.adj.length);
+        if (d.health === 'yellow') yellow++;
+        if (d.health === 'red') red++;
+
     let tdP=0, tpP=0, tM=0, spC=0, pdC=0, yR=0, rR=0, dC=0;
+
     const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
-    filtered.forEach(im => { tdP+=im.dealPts; tpP+=im.projPts; tM+=MPC_VALUES[im.tier]; spC+=im.projects; pdC+=im.pd; yR+=im.y; rR+=im.r; dC+=im.deals; });
-    const tot = tdP + tpP, cap = Math.round((tot/tM)*100);
-    document.getElementById('t-im-count').innerText = filtered.length; document.getElementById('t-deal-count').innerText = dC;
-    document.getElementById('t-strat-proj').innerText = spC; document.getElementById('t-total-pts').innerText = tot;
-    document.getElementById('t-max-pts').innerText = tM; document.getElementById('t-deal-pts').innerText = tdP;
-    document.getElementById('t-proj-pts').innerText = tpP; document.getElementById('t-cap-pct').innerText = cap + '%';
-    document.getElementById('t-fill-deals').style.width = (tdP/tM*100)+'%'; document.getElementById('t-fill-projects').style.width = (tpP/tM*100)+'%';
-    document.getElementById('t-risk-total').innerText = `${yR+rR} At-Risk`; document.getElementById('t-risk-breakdown').innerText = `${yR}Y / ${rR}R`;
+
+    filtered.forEach(im => { tdP+=im.dealPts; tpP+=im.projPts; tM+=MPC_VALUES[im.tier] || 120; spC+=im.projects; pdC+=im.pd; yR+=im.y; rR+=im.r; dC+=im.deals; });
+
+    const tot = tdP + tpP, cap = tM ? Math.round((tot/tM)*100) : 0;
+
+    document.getElementById('t-im-count').innerText = filtered.length;
+
+    document.getElementById('t-deal-count').innerText = dC;
+
+    document.getElementById('t-strat-proj').innerText = spC;
+
+    document.getElementById('t-total-pts').innerText = tot;
+
+    document.getElementById('t-max-pts').innerText = tM;
+
+    document.getElementById('t-deal-pts').innerText = tdP;
+
+    document.getElementById('t-proj-pts').innerText = tpP;
+
+    document.getElementById('t-cap-pct').innerText = cap + '%';
+
+    document.getElementById('t-fill-deals').style.width = tM ? (tdP/tM*100)+'%' : '0%';
+
+    document.getElementById('t-fill-projects').style.width = tM ? (tpP/tM*100)+'%' : '0%';
+
+    document.getElementById('t-risk-total').innerText = `${yR+rR} At-Risk Deals`;
+
+    document.getElementById('t-risk-breakdown').innerText = `${yR}Y / ${rR}R Health Breakdown`;
+
     document.getElementById('t-past-due-proj').innerText = `${pdC} Past Due Projects`;
+
 }
 
-function setSort(t) { if (currentSort === t) sortDir = sortDir === 'desc' ? 'asc' : 'desc'; else { currentSort = t; sortDir = 'desc'; } document.querySelectorAll('.btn-sort').forEach(b => b.classList.remove('active-sort')); document.getElementById('sort-'+t).classList.add('active-sort'); renderRoster(); }
-function switchLayout(l) { currentLayout = l; document.getElementById('btn-list').classList.toggle('active', l==='list'); document.getElementById('btn-card').classList.toggle('active', l==='card'); renderRoster(); }
+function renderRoster() {
+
+    const display = document.getElementById('team-display'); display.innerHTML = '';
+
+    const filtered = currentTZ === 'all' ? teamData : teamData.filter(im => im.tz === currentTZ);
+
+    const sorted = [...filtered].sort((a,b) => {
+
+        let vA = currentSort === 'tier' ? parseInt(a.tier.slice(1), 10) : (a.dealPts + a.projPts)/(MPC_VALUES[a.tier] || 120);
+
+        let vB = currentSort === 'tier' ? parseInt(b.tier.slice(1), 10) : (b.dealPts + b.projPts)/(MPC_VALUES[b.tier] || 120);
+
+        return sortDir === 'desc' ? vB - vA : vA - vB;
+
+    });
+
+    let projPts = 0, pastDue = 0;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    myProjects.forEach(p => {
+        projPts += calculateProjectPoints(p);
+        const [m, d, y] = p.endDate.split('/');
+        if (new Date(y, m-1, d) < today) pastDue++;
+    const groups = {};
+
+    sorted.forEach(im => {
+
+        const pct = Math.round(((im.dealPts + im.projPts) / (MPC_VALUES[im.tier] || 120)) * 100);
+
+        const key = currentSort === 'tier' ? `Tier ${im.tier.slice(1)}` : (pct >= 90 ? "Critical (90%+)" : (pct >= 80 ? "High (80-89%)" : "Stable (Under 80%)"));
+
+        if (!groups[key]) groups[key] = []; groups[key].push(im);
+
+    });
+
+    const total = dealPts + projPts;
+    const capPct = Math.round((total / 120) * 100);
+    Object.keys(groups).forEach(key => {
+
+    document.getElementById('stat-deals-count').innerText = myDeals.length;
+    document.getElementById('stat-projects-count').innerText = myProjects.length;
+    document.getElementById('stat-total-pts').innerText = total;
+    document.getElementById('stat-deal-pts').innerText = dealPts;
+    document.getElementById('stat-proj-pts').innerText = projPts;
+        const h = document.createElement('div'); h.className = 'group-header'; h.innerText = key; display.appendChild(h);
+
+    const capLabel = document.getElementById('stat-cap-pct');
+    capLabel.innerText = capPct + '%';
+    capLabel.style.color = capPct >= 90 ? 'var(--ps-red)' : (capPct >= 80 ? 'var(--ps-gold)' : 'var(--ps-dark-green)');
+    
+    document.getElementById('fill-deals').style.width = (dealPts / 120 * 100) + '%';
+    document.getElementById('fill-projects').style.width = (projPts / 120 * 100) + '%';
+        if (currentLayout === 'list') {
+
+    document.getElementById('stat-risk-total').innerText = `${yellow + red} At-Risk Deals`;
+    document.getElementById('stat-risk-breakdown').innerText = `${yellow}Y / ${red}R Breakdown`;
+    document.getElementById('stat-past-due-proj').innerText = `${pastDue} Past Due Projects`;
+            const t = document.createElement('table'); t.innerHTML = `<thead><tr><th>TZ</th><th>Name</th><th>Deals (Pts)</th><th>Projs (Pts)</th><th>% Cap</th><th>Risks (Y/R|P)</th></tr></thead><tbody></tbody>`;
+
+            display.appendChild(t); const b = t.querySelector('tbody');
+
+            groups[key].forEach(im => {
+
+                const pct = Math.round(((im.dealPts+im.projPts)/(MPC_VALUES[im.tier] || 120))*100), c = pct >= 90 ? 'var(--ps-red)' : (pct >= 80 ? 'var(--ps-gold)' : 'var(--ps-green)');
+
+                b.innerHTML += `<tr><td><b>${im.tz}</b></td><td><b>${im.name}</b></td><td>${im.deals} (${im.dealPts})</td><td>${im.projects} (${im.projPts})</td><td><span style="color:${c}; font-weight:700;">${pct}%</span></td><td>${im.y}Y/${im.r}R|<b style="${im.pd>0?'color:var(--ps-red)':''}">${im.pd}P</b></td></tr>`;
+
+            });
+
+        } else {
+
+            const grid = document.createElement('div'); grid.className = 'im-grid'; display.appendChild(grid);
+
+            groups[key].forEach(im => {
+
+                const m = MPC_VALUES[im.tier] || 120, pct = Math.round(((im.dealPts+im.projPts)/m)*100), c = pct >= 90 ? 'var(--ps-red)' : (pct >= 80 ? 'var(--ps-gold)' : 'var(--ps-green)');
+
+                grid.innerHTML += `<div class="im-card" style="border-top-color:${c}">
+
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+
+                        <div><h3>${im.name}</h3><span class="sub-info">${im.tz} • Tier ${im.tier.slice(1)}</span></div>
+
+                        <span style="font-weight:700; color:${c}; font-size:12px;">${pct}%</span>
+
+                    </div>
+
+                    <div class="stats">Pts: <b>${im.dealPts+im.projPts}</b>/${m} | Deals: ${im.deals}<br>Projects past due: <b style="${im.pd > 0 ? 'color:var(--ps-red);' : ''}">${im.pd}</b></div>
+
+                    <div class="summary-cap-bar" style="height:6px;"><div style="width:${(im.dealPts/m)*100}%; background:var(--ps-green);"></div><div style="width:${(im.projPts/m)*100}%; background:var(--ps-blue);"></div></div>
+
+                </div>`;
+
+            });
+
+        }
+
+    });
+
+}
+
+function renderMyBook() {
+    const body = document.getElementById('my-deals-body');
+    body.innerHTML = '';
+    myDeals.sort((a, b) => STAGES.indexOf(a.stage) - STAGES.indexOf(b.stage));
+    let currentStage = "";
+function renderContent() {
+  renderRoster();
+  renderAssignment();
+}
+
+    myDeals.forEach(deal => {
+        if (deal.stage !== currentStage) {
+            body.innerHTML += `<tr><td colspan="7" class="stage-group-header">${deal.stage}</td></tr>`;
+            currentStage = deal.stage;
+function setSort(t) { if (currentSort === t) sortDir = sortDir === 'desc' ? 'asc' : 'desc'; else { currentSort = t; sortDir = 'desc'; } document.querySelectorAll('.btn-sort').forEach(b => b.classList.remove('active-sort')); document.getElementById('sort-'+t).classList.add('active-sort'); renderContent(); }
+function switchLayout(l) { currentLayout = l; document.getElementById('btn-list').classList.toggle('active', l==='list'); document.getElementById('btn-card').classList.toggle('active', l==='card'); renderContent(); }
+
+const REPORTING_STATE_KEY = "ttw_reporting_state_v2";
+const REPORTING_SNAPSHOT_KEY = "ttw_reporting_snapshots_v2";
+const REPORTING_PROJECT_START = "2025-10-01";
+const REPORTING_NS = "http://www.w3.org/2000/svg";
+const REPORTING_CHART_DEFAULTS = [
+  { id: "team-capacity-load", title: "Team Capacity vs Load", hidden: false, width: 520, height: 330 },
+  { id: "risk-load-trend", title: "Risk vs Load Trend", hidden: false, width: 520, height: 330 },
+  { id: "velocity-trend", title: "Velocity Trend", hidden: false, width: 520, height: 330 },
+  { id: "rotation-removals", title: "Rotation Removals", hidden: false, width: 520, height: 330 },
+  { id: "individual-work", title: "Individual Work Analysis", hidden: false, width: 620, height: 370 },
+  { id: "territory-capacity", title: "Territory Capacity Comparison", hidden: false, width: 520, height: 330 },
+  { id: "point-trends", title: "Point Trends", hidden: false, width: 520, height: 330 },
+  { id: "capacity-projection", title: "Advanced Capacity Projections", hidden: false, width: 620, height: 360 }
+];
+
+let reportingState = null;
+let reportingSnapshots = [];
+let reportingCache = new Map();
+let reportingObservers = [];
+let reportingDraggingChartId = null;
+
+function safeJsonParse(raw, fallback) {
+  try { return JSON.parse(raw); } catch (_err) { return fallback; }
+}
+
+function hash32(input) {
+  let h = 2166136261;
+  for (let i = 0; i < input.length; i++) {
+    h ^= input.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0);
+}
+
+function seededInt(seed, min, max) {
+  const span = max - min + 1;
+  return min + (hash32(seed) % span);
+}
+
+function pickBySeed(seed, list) {
+  return list[hash32(seed) % list.length];
+}
+
+function cloneDate(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function formatMonthKey(dateObj) { return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}`; }
+function parseMonthKey(monthKey) {
+  const [y, m] = monthKey.split("-").map(Number);
+  return new Date(y, (m || 1) - 1, 1);
+}
+function toIsoDate(dateObj) {
+  return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}-${String(dateObj.getDate()).padStart(2, "0")}`;
+}
+function monthLabelFromKey(monthKey) {
+  const d = parseMonthKey(monthKey);
+  return d.toLocaleString("en-US", { month: "short", year: "2-digit" });
+}
+function addMonths(dateObj, months) { return new Date(dateObj.getFullYear(), dateObj.getMonth() + months, 1); }
+function endOfMonth(dateObj) { return new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0); }
+function startOfDay(dateObj) { return new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()); }
+function clampNumber(num, min, max) { return Math.max(min, Math.min(max, num)); }
+
+function getReportingIMCatalog() {
+  const seen = new Set();
+  const catalog = [];
+  teamData.forEach(im => {
+    if (seen.has(im.name)) return;
+    seen.add(im.name);
+    const tier = ["T1", "T2", "T3", "T4"].includes(im.tier) ? im.tier : "T4";
+    const tz = ["EST", "CST", "PST", "MST"].includes(im.tz) ? im.tz : "EST";
+    catalog.push({ name: im.name, tz, tier });
+  });
+  if (!catalog.some(im => im.tz === "MST")) {
+    catalog.push({ name: "MST Coverage IM", tz: "MST", tier: "T2" });
+  }
+  return catalog.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function deriveDealPoints(record) {
+  const sizePts = SIZE_PTS[record.size] || 0;
+  const sisPts = SIS_PTS[record.sis] || 0;
+  const healthPts = HEALTH_PTS[record.health] || 0;
+  const stageExtra = (record.stage === "Stalled" || record.stage === "On Hold") ? 1 : 0;
+  return sizePts + sisPts + healthPts + stageExtra;
+}
+
+function deriveProjectPoints(record) {
+  const rolePts = record.projectRole === "Lead" ? 3 : 1;
+  const typePts = record.projectType === "Strategic" ? 3 : 1;
+  const compPts = record.projectComplexity === "High" ? 3 : (record.projectComplexity === "Medium" ? 2 : 1);
+  return rolePts + typePts + compPts;
+}
+
+function generateReportingSnapshots() {
+  const imCatalog = getReportingIMCatalog();
+  const start = new Date(2024, 0, 1);
+  const now = new Date();
+  const end = new Date(now.getFullYear(), now.getMonth(), 1);
+  const snapshots = [];
+
+  const projectStart = new Date(REPORTING_PROJECT_START + "T00:00:00");
+  const sizes = ["Strategic", "Large", "Medium", "Small"];
+  const healths = ["green", "yellow", "red"];
+  const sisOptions = Object.keys(SIS_PTS);
+
+  for (let cursor = cloneDate(start); cursor <= end; cursor = addMonths(cursor, 1)) {
+    const monthKey = formatMonthKey(cursor);
+    const hasProjectData = cursor >= new Date(projectStart.getFullYear(), projectStart.getMonth(), 1);
+
+    imCatalog.forEach(im => {
+      const hireOffset = seededInt(`hire-${im.name}`, 0, 16);
+      const hireDate = addMonths(start, hireOffset);
+      if (cursor < hireDate) return;
+
+      const dealCount = seededInt(`${monthKey}-${im.name}-deals`, 4, 16);
+      let dealPts = 0;
+      let redDeals = 0;
+      let yellowDeals = 0;
+      for (let i = 0; i < dealCount; i++) {
+        const size = pickBySeed(`${monthKey}-${im.name}-size-${i}`, sizes);
+        const sis = pickBySeed(`${monthKey}-${im.name}-sis-${i}`, sisOptions);
+        const health = pickBySeed(`${monthKey}-${im.name}-health-${i}`, healths);
+        const stage = pickBySeed(`${monthKey}-${im.name}-stage-${i}`, STAGES);
+        const rec = { size, sis, health, stage };
+        dealPts += deriveDealPoints(rec);
+        if (health === "red") redDeals++;
+        if (health === "yellow") yellowDeals++;
+      }
+
+      let projectPts = null;
+      let projectCount = null;
+      if (hasProjectData) {
+        projectCount = seededInt(`${monthKey}-${im.name}-projects`, 0, 4);
+        let sum = 0;
+        for (let p = 0; p < projectCount; p++) {
+          const rec = {
+            projectRole: pickBySeed(`${monthKey}-${im.name}-prole-${p}`, ["Lead", "Contributor"]),
+            projectType: pickBySeed(`${monthKey}-${im.name}-ptype-${p}`, ["Strategic", "Internal"]),
+            projectComplexity: pickBySeed(`${monthKey}-${im.name}-pcomp-${p}`, ["Low", "Medium", "High"])
+          };
+          sum += deriveProjectPoints(rec);
+        }
+        const pts = (SIZE_PTS[deal.size] + SIS_PTS[deal.sis] + HEALTH_PTS[deal.health] + deal.adj.length);
+        body.innerHTML += `<tr>
+            <td>${deal.stage}</td>
+            <td><strong>${deal.name}</strong></td>
+            <td>${deal.size} (${SIZE_PTS[deal.size]})</td>
+            <td>${deal.sis} (${SIS_PTS[deal.sis]})</td>
+            <td><span class="pill ${deal.health}">${deal.health} (${HEALTH_PTS[deal.health]})</span></td>
+            <td>
+                <div class="adj-wrapper">
+                    <div class="adj-btn" onclick="toggleAdj(${deal.id})">Manage ▼</div>
+                    <div class="adj-dropdown" id="adj-menu-${deal.id}">
+                        ${ADJ_OPTIONS.map(opt => `<label style="display:block; margin-bottom:5px;"><input type="checkbox" ${deal.adj.includes(opt)?'checked':''} onchange="updateAdj(${deal.id},'${opt}')"> ${opt} (+1)</label>`).join('')}
+                    </div>
+                    <div class="adj-display">${deal.adj.map(a => `<span>${a} (+1)</span>`).join('')}</div>
+                </div>
+            </td>
+            <td><strong>${pts}</strong></td>
+        </tr>`;
+        projectPts = sum;
+      }
+
+      const cap = MPC_VALUES[im.tier] || 120;
+      const totalPts = dealPts + (projectPts || 0);
+      const pct = cap ? (totalPts / cap) : 0;
+      const velocityRemovals = seededInt(`${monthKey}-${im.name}-velrem`, 0, 1) && dealCount > 13 ? 1 : 0;
+      const capacityRemovals = pct > 1 ? 1 : 0;
+      const manualRemovals = seededInt(`${monthKey}-${im.name}-manrem`, 0, 7) === 0 ? 1 : 0;
+
+      snapshots.push({
+        month: monthKey,
+        date: toIsoDate(cursor),
+        imName: im.name,
+        customerName: `${im.name.split(" ")[0]} Portfolio ${monthKey}`,
+        timezone: im.tz,
+        tier: im.tier,
+        size: "Mixed",
+        health: redDeals > 0 ? "red" : (yellowDeals > 0 ? "yellow" : "green"),
+        sis: "Mixed",
+        stage: "Mixed",
+        counts: dealCount,
+        dealPoints: dealPts,
+        projectPoints: projectPts,
+        totalPoints: totalPts,
+        capacity: cap,
+        redDeals,
+        yellowDeals,
+        dealsAssigned: dealCount,
+        assignments: dealCount + (projectCount || 0),
+        removals: {
+          capacity: capacityRemovals,
+          velocity: velocityRemovals,
+          other: manualRemovals
+        },
+        hasProjectData
+      });
+    });
+  }
+  return snapshots;
+}
+
+function renderProjects() {
+    const body = document.getElementById('my-projects-body');
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const twoWeeks = new Date();
+    twoWeeks.setDate(today.getDate() + 14);
+function loadReportingSnapshots() {
+  const existing = safeJsonParse(localStorage.getItem(REPORTING_SNAPSHOT_KEY), null);
+  if (existing && Array.isArray(existing.snapshots) && existing.snapshots.length) {
+    return existing.snapshots;
+  }
+  const generated = generateReportingSnapshots();
+  localStorage.setItem(REPORTING_SNAPSHOT_KEY, JSON.stringify({ version: 2, generatedAt: new Date().toISOString(), snapshots: generated }));
+  return generated;
+}
+
+    body.innerHTML = myProjects.map(p => {
+        const [m, d, y] = p.endDate.split('/');
+        const end = new Date(y, m-1, d);
+        let dateClass = "green";
+        if (end < today) dateClass = "red";
+        else if (end <= twoWeeks) dateClass = "yellow";
+function buildDefaultReportingState() {
+  const year = new Date().getFullYear();
+  const monthAnchor = `${year}-${String(new Date().getMonth() + 1).padStart(2, "0")}`;
+  return {
+    filters: {
+      rangeMode: "year",
+      year,
+      monthAnchor,
+      compareEnabled: true,
+      compareYear: year - 1,
+      customStart: "",
+      customEnd: "",
+      dataMode: "both",
+      territory: "ALL",
+      tier: "ALL",
+      ims: []
+    },
+    layout: REPORTING_CHART_DEFAULTS.map(c => ({ ...c })),
+    drill: { level: "team", territory: null, tier: null, im: null, month: null }
+  };
+}
+
+        return `<tr>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.role} (${ROLE_PTS[p.role]})</td>
+            <td>${p.type} (${TYPE_PTS[p.type]})</td>
+            <td>${p.complexity} (${COMP_PTS[p.complexity]})</td>
+            <td><span class="pill ${dateClass}">${p.endDate}</span></td>
+            <td><strong>${calculateProjectPoints(p)}</strong></td>
+        </tr>`;
+    }).join('');
+function loadReportingState() {
+  const saved = safeJsonParse(localStorage.getItem(REPORTING_STATE_KEY), null);
+  const defaults = buildDefaultReportingState();
+  if (!saved || !saved.filters || !Array.isArray(saved.layout)) return defaults;
+
+  const layoutById = new Map(saved.layout.map(l => [l.id, l]));
+  const mergedLayout = REPORTING_CHART_DEFAULTS.map(def => ({ ...def, ...(layoutById.get(def.id) || {}) }));
+  return {
+    filters: { ...defaults.filters, ...saved.filters },
+    layout: mergedLayout,
+    drill: { ...defaults.drill, ...(saved.drill || {}) }
+  };
+}
+
+function toggleAdj(id) { 
+    document.querySelectorAll('.adj-dropdown').forEach(d => {
+        if (d.id !== `adj-menu-${id}`) d.classList.remove('active');
+function saveReportingState() {
+  localStorage.setItem(REPORTING_STATE_KEY, JSON.stringify(reportingState));
+}
+
+function setReportingState(mutator, rerender = true) {
+  mutator(reportingState);
+  saveReportingState();
+  reportingCache.clear();
+  if (rerender && isReportingVisible()) {
+    renderReportingDashboard();
+  }
+}
+
+function isReportingVisible() {
+  const el = document.getElementById("view-reporting");
+  return !!el && el.style.display !== "none";
+}
+
+function getAllYearsFromSnapshots() {
+  const years = new Set();
+  reportingSnapshots.forEach(s => {
+    years.add(parseInt(s.month.slice(0, 4), 10));
+  });
+  return [...years].sort((a, b) => a - b);
+}
+
+function getRangeFromFilters(filters, useCompareYear = false) {
+  const anchorYear = useCompareYear ? filters.compareYear : filters.year;
+  const mode = filters.rangeMode;
+
+  if (mode === "custom") {
+    const start = filters.customStart ? new Date(filters.customStart + "T00:00:00") : new Date(anchorYear, 0, 1);
+    const end = filters.customEnd ? new Date(filters.customEnd + "T00:00:00") : new Date(anchorYear, 11, 31);
+    return {
+      start: startOfDay(start),
+      end: startOfDay(end),
+      label: `Custom (${toIsoDate(start)} to ${toIsoDate(end)})`
+    };
+  }
+
+  if (mode === "month") {
+    const [y, m] = (filters.monthAnchor || `${anchorYear}-01`).split("-").map(Number);
+    const start = new Date(y || anchorYear, (m || 1) - 1, 1);
+    const end = endOfMonth(start);
+    return { start, end, label: `${start.toLocaleString("en-US", { month: "long" })} ${start.getFullYear()}` };
+  }
+
+  if (mode === "year") {
+    return {
+      start: new Date(anchorYear, 0, 1),
+      end: new Date(anchorYear, 11, 31),
+      label: `Year ${anchorYear}`
+    };
+  }
+
+  if (mode === "bts") {
+    return {
+      start: new Date(anchorYear, 3, 1),
+      end: new Date(anchorYear, 8, 30),
+      label: `BTS ${anchorYear} (Apr-Sep)`
+    };
+  }
+
+  if (mode === "q1") {
+    return {
+      start: new Date(anchorYear, 8, 1),
+      end: new Date(anchorYear, 10, 30),
+      label: `Q1 FY${anchorYear} (Sep-Nov)`
+    };
+  }
+
+  if (mode === "q2") {
+    return {
+      start: new Date(anchorYear, 11, 1),
+      end: new Date(anchorYear + 1, 1, 28),
+      label: `Q2 FY${anchorYear} (Dec-Feb)`
+    };
+  }
+
+  if (mode === "q3") {
+    return {
+      start: new Date(anchorYear + 1, 2, 1),
+      end: new Date(anchorYear + 1, 4, 31),
+      label: `Q3 FY${anchorYear} (Mar-May)`
+    };
+  }
+
+  if (mode === "q4") {
+    return {
+      start: new Date(anchorYear + 1, 5, 1),
+      end: new Date(anchorYear + 1, 7, 31),
+      label: `Q4 FY${anchorYear} (Jun-Aug)`
+    };
+  }
+
+  return { start: new Date(anchorYear, 0, 1), end: new Date(anchorYear, 11, 31), label: `Year ${anchorYear}` };
+}
+
+function getMonthKeysBetween(start, end) {
+  const keys = [];
+  for (let d = new Date(start.getFullYear(), start.getMonth(), 1); d <= end; d = addMonths(d, 1)) {
+    keys.push(formatMonthKey(d));
+  }
+  return keys;
+}
+
+function snapshotMatchesFilters(snapshot, filters) {
+  if (filters.territory !== "ALL" && snapshot.timezone !== filters.territory) return false;
+  if (filters.tier !== "ALL" && snapshot.tier !== filters.tier) return false;
+  if (filters.ims.length && !filters.ims.includes(snapshot.imName)) return false;
+  return true;
+}
+
+function pointValueByMode(snapshot, mode) {
+  if (mode === "deal") return snapshot.dealPoints || 0;
+  if (mode === "project") return snapshot.projectPoints == null ? 0 : snapshot.projectPoints;
+  return (snapshot.dealPoints || 0) + (snapshot.projectPoints == null ? 0 : snapshot.projectPoints);
+}
+
+function buildAggregatedData(filters, useComparison = false) {
+  const range = getRangeFromFilters(filters, useComparison);
+  const cacheKey = JSON.stringify({ rangeStart: toIsoDate(range.start), rangeEnd: toIsoDate(range.end), filters, useComparison });
+  if (reportingCache.has(cacheKey)) return reportingCache.get(cacheKey);
+
+  const monthKeys = getMonthKeysBetween(range.start, range.end);
+  const byMonth = monthKeys.reduce((acc, mk) => {
+    acc[mk] = {
+      month: mk,
+      points: 0,
+      dealPoints: 0,
+      projectPoints: 0,
+      capacity: 0,
+      redDeals: 0,
+      velocity: 0,
+      removals: { capacity: 0, velocity: 0, other: 0 },
+      incompleteProjectData: false
+    };
+    return acc;
+  }, {});
+
+  const byIM = {};
+  const byTerritory = { EST: initTerritoryAgg(), CST: initTerritoryAgg(), MST: initTerritoryAgg(), PST: initTerritoryAgg() };
+  const byTier = { T1: initTierAgg(), T2: initTierAgg(), T3: initTierAgg(), T4: initTierAgg() };
+
+  reportingSnapshots.forEach(s => {
+    const monthDate = parseMonthKey(s.month);
+    if (monthDate < range.start || monthDate > range.end) return;
+    if (!snapshotMatchesFilters(s, filters)) return;
+    if (!byMonth[s.month]) return;
+
+    const selectedPoints = pointValueByMode(s, filters.dataMode);
+    const monthAgg = byMonth[s.month];
+    monthAgg.points += selectedPoints;
+    monthAgg.dealPoints += s.dealPoints || 0;
+    monthAgg.projectPoints += s.projectPoints == null ? 0 : s.projectPoints;
+    monthAgg.capacity += s.capacity || 0;
+    monthAgg.redDeals += s.redDeals || 0;
+    monthAgg.velocity += s.dealsAssigned || 0;
+    monthAgg.removals.capacity += s.removals.capacity || 0;
+    monthAgg.removals.velocity += s.removals.velocity || 0;
+    monthAgg.removals.other += s.removals.other || 0;
+    if ((filters.dataMode === "project" || filters.dataMode === "both") && s.projectPoints == null) {
+      monthAgg.incompleteProjectData = true;
+    }
+
+    if (!byIM[s.imName]) {
+      byIM[s.imName] = {
+        name: s.imName,
+        timezone: s.timezone,
+        tier: s.tier,
+        dealPoints: 0,
+        projectPoints: 0,
+        points: 0,
+        capacity: 0,
+        redDeals: 0,
+        velocity: 0
+      };
+    }
+    byIM[s.imName].dealPoints += s.dealPoints || 0;
+    byIM[s.imName].projectPoints += s.projectPoints == null ? 0 : s.projectPoints;
+    byIM[s.imName].points += selectedPoints;
+    byIM[s.imName].capacity += s.capacity || 0;
+    byIM[s.imName].redDeals += s.redDeals || 0;
+    byIM[s.imName].velocity += s.dealsAssigned || 0;
+
+    if (byTerritory[s.timezone]) {
+      byTerritory[s.timezone].dealPoints += s.dealPoints || 0;
+      byTerritory[s.timezone].projectPoints += s.projectPoints == null ? 0 : s.projectPoints;
+      byTerritory[s.timezone].points += selectedPoints;
+      byTerritory[s.timezone].capacity += s.capacity || 0;
+    }
+
+    if (byTier[s.tier]) {
+      byTier[s.tier].dealPoints += s.dealPoints || 0;
+      byTier[s.tier].projectPoints += s.projectPoints == null ? 0 : s.projectPoints;
+      byTier[s.tier].points += selectedPoints;
+      byTier[s.tier].capacity += s.capacity || 0;
+    }
+  });
+
+  const monthSeries = monthKeys.map(mk => byMonth[mk]);
+  const totals = monthSeries.reduce((acc, m) => {
+    acc.points += m.points;
+    acc.capacity += m.capacity;
+    acc.redDeals += m.redDeals;
+    acc.velocity += m.velocity;
+    acc.removals.capacity += m.removals.capacity;
+    acc.removals.velocity += m.removals.velocity;
+    acc.removals.other += m.removals.other;
+    if (m.incompleteProjectData) acc.hasIncomplete = true;
+    return acc;
+  }, { points: 0, capacity: 0, redDeals: 0, velocity: 0, removals: { capacity: 0, velocity: 0, other: 0 }, hasIncomplete: false });
+
+  const result = {
+    range,
+    monthKeys,
+    monthSeries,
+    totals,
+    byIM: Object.values(byIM),
+    byTerritory,
+    byTier
+  };
+  reportingCache.set(cacheKey, result);
+  return result;
+}
+
+function initTerritoryAgg() { return { dealPoints: 0, projectPoints: 0, points: 0, capacity: 0 }; }
+function initTierAgg() { return { dealPoints: 0, projectPoints: 0, points: 0, capacity: 0 }; }
+
+function getComparisonData(filters) {
+  if (!filters.compareEnabled) return null;
+  if (filters.rangeMode === "custom") return null;
+  return buildAggregatedData(filters, true);
+}
+
+function updateReportingControlValues() {
+  const f = reportingState.filters;
+  document.getElementById("rep-range-mode").value = f.rangeMode;
+  document.getElementById("rep-year").value = String(f.year);
+  document.getElementById("rep-month-anchor").value = f.monthAnchor;
+  document.getElementById("rep-compare-enabled").checked = !!f.compareEnabled;
+  document.getElementById("rep-compare-year").value = String(f.compareYear);
+  document.getElementById("rep-custom-start").value = f.customStart || "";
+  document.getElementById("rep-custom-end").value = f.customEnd || "";
+  document.getElementById("rep-territory").value = f.territory;
+  document.getElementById("rep-tier").value = f.tier;
+  const imSel = document.getElementById("rep-im-select");
+  [...imSel.options].forEach(opt => { opt.selected = f.ims.includes(opt.value); });
+  setDataModeCheckboxes(f.dataMode);
+  const isCustom = f.rangeMode === "custom";
+  document.getElementById("rep-custom-start-wrap").style.display = isCustom ? "flex" : "none";
+  document.getElementById("rep-custom-end-wrap").style.display = isCustom ? "flex" : "none";
+}
+
+function setDataModeCheckboxes(mode) {
+  document.getElementById("rep-mode-deal").checked = mode === "deal";
+  document.getElementById("rep-mode-project").checked = mode === "project";
+  document.getElementById("rep-mode-both").checked = mode === "both";
+}
+
+function populateReportingControls() {
+  const years = getAllYearsFromSnapshots();
+  const yearSelect = document.getElementById("rep-year");
+  const compareYearSelect = document.getElementById("rep-compare-year");
+  yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join("");
+  compareYearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join("");
+
+  const imSelect = document.getElementById("rep-im-select");
+  const ims = getReportingIMCatalog();
+  imSelect.innerHTML = ims.map(im => `<option value="${im.name}">${im.name} (${im.tz}, ${im.tier})</option>`).join("");
+
+  if (!years.includes(reportingState.filters.year)) reportingState.filters.year = years[years.length - 1];
+  if (!years.includes(reportingState.filters.compareYear)) reportingState.filters.compareYear = years[Math.max(0, years.length - 2)];
+  updateReportingControlValues();
+}
+
+function attachReportingControlHandlers() {
+  const onFilterUpdate = () => {
+    setReportingState(state => {
+      state.filters.rangeMode = document.getElementById("rep-range-mode").value;
+      state.filters.year = parseInt(document.getElementById("rep-year").value, 10);
+      state.filters.monthAnchor = document.getElementById("rep-month-anchor").value || state.filters.monthAnchor;
+      state.filters.compareEnabled = document.getElementById("rep-compare-enabled").checked;
+      state.filters.compareYear = parseInt(document.getElementById("rep-compare-year").value, 10);
+      state.filters.customStart = document.getElementById("rep-custom-start").value;
+      state.filters.customEnd = document.getElementById("rep-custom-end").value;
+      state.filters.territory = document.getElementById("rep-territory").value;
+      state.filters.tier = document.getElementById("rep-tier").value;
+      state.filters.ims = [...document.getElementById("rep-im-select").selectedOptions].map(o => o.value);
+    });
+    document.getElementById(`adj-menu-${id}`).classList.toggle('active'); 
+    updateReportingControlValues();
+  };
+
+  ["rep-range-mode", "rep-year", "rep-month-anchor", "rep-compare-enabled", "rep-compare-year", "rep-custom-start", "rep-custom-end", "rep-territory", "rep-tier", "rep-im-select"]
+    .forEach(id => document.getElementById(id).addEventListener("change", onFilterUpdate));
+
+  document.getElementById("rep-mode-deal").addEventListener("change", () => setModeFromCheckbox("deal"));
+  document.getElementById("rep-mode-project").addEventListener("change", () => setModeFromCheckbox("project"));
+  document.getElementById("rep-mode-both").addEventListener("change", () => setModeFromCheckbox("both"));
+
+  document.getElementById("rep-reset-filters").addEventListener("click", () => {
+    setReportingState(state => {
+      const defaults = buildDefaultReportingState().filters;
+      state.filters = { ...defaults };
+      state.drill = { level: "team", territory: null, tier: null, im: null, month: null };
+    });
+    populateReportingControls();
+  });
+
+  document.getElementById("rep-reset-layout").addEventListener("click", () => {
+    setReportingState(state => {
+      state.layout = REPORTING_CHART_DEFAULTS.map(c => ({ ...c }));
+    });
+  });
+}
+
+function updateAdj(id, opt) {
+    const d = myDeals.find(x => x.id === id);
+    const idx = d.adj.indexOf(opt);
+    idx > -1 ? d.adj.splice(idx, 1) : d.adj.push(opt);
+    localStorage.setItem(`adj_my_deal_${id}`, JSON.stringify(d.adj));
+    renderMyBook(); 
+    updateMetrics();
+function setModeFromCheckbox(mode) {
+  setReportingState(state => {
+    state.filters.dataMode = mode;
+  });
+  updateReportingControlValues();
+}
+
+window.onclick = e => { if (!e.target.closest('.adj-wrapper')) document.querySelectorAll('.adj-dropdown').forEach(d => d.classList.remove('active')); };
+function initReporting() {
+  reportingSnapshots = loadReportingSnapshots();
+  reportingState = loadReportingState();
+  populateReportingControls();
+  attachReportingControlHandlers();
+}
+
+updateMetrics(); renderMyBook(); renderProjects();
+function createSvg(width, height) {
+  const svg = document.createElementNS(REPORTING_NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("preserveAspectRatio", "none");
+  return svg;
+}
+
+function svgNode(tag, attrs = {}) {
+  const n = document.createElementNS(REPORTING_NS, tag);
+  Object.keys(attrs).forEach(k => n.setAttribute(k, String(attrs[k])));
+  return n;
+}
+
+function formatCompactNumber(v) {
+  if (Math.abs(v) >= 1000000) return `${(v / 1000000).toFixed(1)}M`;
+  if (Math.abs(v) >= 1000) return `${(v / 1000).toFixed(1)}k`;
+  return String(Math.round(v));
+}
+
+function attachTooltipAndClick(node, tooltipText, clickPayload) {
+  node.classList.add("chart-clickable");
+  node.addEventListener("mousemove", e => showTooltip(e, tooltipText));
+  node.addEventListener("mouseenter", e => showTooltip(e, tooltipText));
+  node.addEventListener("mouseleave", hideTooltip);
+  if (clickPayload) {
+    node.addEventListener("click", () => applyDrillPayload(clickPayload));
+  }
+}
+
+function showTooltip(evt, text) {
+  const tip = document.getElementById("rep-tooltip");
+  tip.innerText = text;
+  tip.style.display = "block";
+  tip.style.left = `${evt.clientX + 12}px`;
+  tip.style.top = `${evt.clientY + 12}px`;
+}
+
+function hideTooltip() {
+  document.getElementById("rep-tooltip").style.display = "none";
+}
+
+function applyDrillPayload(payload) {
+  setReportingState(state => {
+    if (payload.territory) {
+      state.filters.territory = payload.territory;
+      state.drill.territory = payload.territory;
+      state.drill.level = "territory";
+    }
+    if (payload.tier) {
+      state.filters.tier = payload.tier;
+      state.drill.tier = payload.tier;
+      state.drill.level = "tier";
+    }
+    if (payload.imName) {
+      state.filters.ims = [payload.imName];
+      state.drill.im = payload.imName;
+      state.drill.level = "individual";
+    }
+    if (payload.month) {
+      state.drill.month = payload.month;
+    }
+  });
+  updateReportingControlValues();
+}
+
+function drawAxes(svg, chartArea, maxY, yTicks = 4, rightAxis = null) {
+  const { left, top, width, height } = chartArea;
+  for (let i = 0; i <= yTicks; i++) {
+    const y = top + (height * i / yTicks);
+    const grid = svgNode("line", { x1: left, y1: y, x2: left + width, y2: y, class: "chart-grid-line" });
+    svg.appendChild(grid);
+    const val = maxY - (maxY * i / yTicks);
+    const lbl = svgNode("text", { x: left - 6, y: y + 3, "font-size": 9, "text-anchor": "end", fill: "#777" });
+    lbl.textContent = formatCompactNumber(val);
+    svg.appendChild(lbl);
+  }
+  const xAxis = svgNode("line", { x1: left, y1: top + height, x2: left + width, y2: top + height, class: "chart-axis" });
+  const yAxis = svgNode("line", { x1: left, y1: top, x2: left, y2: top + height, class: "chart-axis" });
+  svg.appendChild(xAxis);
+  svg.appendChild(yAxis);
+
+  if (rightAxis && rightAxis.max > 0) {
+    for (let i = 0; i <= yTicks; i++) {
+      const y = top + (height * i / yTicks);
+      const val = rightAxis.max - (rightAxis.max * i / yTicks);
+      const lbl = svgNode("text", { x: left + width + 6, y: y + 3, "font-size": 9, "text-anchor": "start", fill: "#777" });
+      lbl.textContent = formatCompactNumber(val);
+      svg.appendChild(lbl);
+    }
+    const yAxisRight = svgNode("line", { x1: left + width, y1: top, x2: left + width, y2: top + height, class: "chart-axis" });
+    svg.appendChild(yAxisRight);
+  }
+}
+
+function drawLineChart(svg, chartArea, labels, seriesList) {
+  const leftSeries = seriesList.filter(s => s.axis !== "right");
+  const rightSeries = seriesList.filter(s => s.axis === "right");
+  const maxLeft = Math.max(1, ...leftSeries.flatMap(s => s.values));
+  const maxRight = Math.max(1, ...rightSeries.flatMap(s => s.values));
+  drawAxes(svg, chartArea, maxLeft, 4, rightSeries.length ? { max: maxRight } : null);
+  const { left, top, width, height } = chartArea;
+
+  const xFor = idx => left + (labels.length <= 1 ? width / 2 : (width * idx / (labels.length - 1)));
+  const yFor = (val, axis) => {
+    const max = axis === "right" ? maxRight : maxLeft;
+    return top + height - ((val / Math.max(1, max)) * height);
+  };
+
+  labels.forEach((label, idx) => {
+    const x = xFor(idx);
+    const t = svgNode("text", { x, y: top + height + 12, "font-size": 8, "text-anchor": "middle", fill: "#888" });
+    t.textContent = label;
+    svg.appendChild(t);
+  });
+
+  seriesList.forEach(series => {
+    if (!series.values.length) return;
+    let d = "";
+    series.values.forEach((v, i) => {
+      const x = xFor(i), y = yFor(v, series.axis);
+      d += `${i === 0 ? "M" : "L"}${x} ${y} `;
+    });
+    const path = svgNode("path", {
+      d: d.trim(),
+      fill: "none",
+      stroke: series.color,
+      "stroke-width": 2,
+      "stroke-dasharray": series.dashed ? "5 4" : "none"
+    });
+    svg.appendChild(path);
+
+    series.values.forEach((v, i) => {
+      const x = xFor(i), y = yFor(v, series.axis);
+      const point = svgNode("circle", { cx: x, cy: y, r: 3.2, fill: series.color });
+      const tooltip = `${series.name}\n${labels[i]}: ${Math.round(v)}`;
+      attachTooltipAndClick(point, tooltip, series.clickPayloadBuilder ? series.clickPayloadBuilder(i) : null);
+      svg.appendChild(point);
+    });
+  });
+}
+
+function drawLegend(svg, entries, x, y) {
+  entries.forEach((entry, idx) => {
+    const rowY = y + (idx * 12);
+    const swatch = svgNode("line", {
+      x1: x,
+      y1: rowY,
+      x2: x + 12,
+      y2: rowY,
+      stroke: entry.color,
+      "stroke-width": 2,
+      "stroke-dasharray": entry.dashed ? "5 4" : "none"
+    });
+    svg.appendChild(swatch);
+    const text = svgNode("text", { x: x + 16, y: rowY + 3, "font-size": 9, fill: "#666" });
+    text.textContent = entry.name;
+    svg.appendChild(text);
+  });
+}
+
+function renderTeamCapacityChart(bodyEl, data, comparison) {
+  const width = Math.max(380, bodyEl.clientWidth - 12);
+  const height = Math.max(220, bodyEl.clientHeight - 34);
+  const svg = createSvg(width, height);
+  const area = { left: 42, top: 14, width: width - 86, height: height - 48 };
+  const labels = data.monthSeries.map(m => monthLabelFromKey(m.month));
+
+  const series = [
+    { name: "Assigned Points", color: "#85ad33", values: data.monthSeries.map(m => m.points), clickPayloadBuilder: idx => ({ month: data.monthSeries[idx].month }) },
+    { name: "Capacity", color: "#7bbaf0", values: data.monthSeries.map(m => m.capacity), clickPayloadBuilder: idx => ({ month: data.monthSeries[idx].month }) }
+  ];
+  if (comparison) {
+    series.push({ name: `Assigned (Compare ${comparison.range.label})`, color: "#a0a0a0", dashed: true, values: comparison.monthSeries.map(m => m.points) });
+  }
+
+  drawLineChart(svg, area, labels, series);
+  drawLegend(svg, series.map(s => ({ name: s.name, color: s.color, dashed: !!s.dashed })), area.left + 4, area.top + 8);
+  return { svg, footnote: `${data.range.label} | X-axis time, Y-axis points.` };
+}
+
+function renderRiskLoadChart(bodyEl, data) {
+  const width = Math.max(380, bodyEl.clientWidth - 12);
+  const height = Math.max(220, bodyEl.clientHeight - 34);
+  const svg = createSvg(width, height);
+  const area = { left: 42, top: 14, width: width - 86, height: height - 48 };
+  const labels = data.monthSeries.map(m => monthLabelFromKey(m.month));
+  const series = [
+    { name: "Total Points", color: "#85ad33", values: data.monthSeries.map(m => m.points), axis: "left", clickPayloadBuilder: idx => ({ month: data.monthSeries[idx].month }) },
+    { name: "Red Deals", color: "#d9534f", values: data.monthSeries.map(m => m.redDeals), axis: "right", clickPayloadBuilder: idx => ({ month: data.monthSeries[idx].month }) }
+  ];
+  drawLineChart(svg, area, labels, series);
+  drawLegend(svg, [{ name: "Total Points", color: "#85ad33" }, { name: "Red Deals", color: "#d9534f" }], area.left + 4, area.top + 8);
+  return { svg, footnote: "Dual-axis trend: workload (left axis) vs red-deal risk count (right axis)." };
+}
+
+function renderVelocityChart(bodyEl, data) {
+  const width = Math.max(380, bodyEl.clientWidth - 12);
+  const height = Math.max(220, bodyEl.clientHeight - 34);
+  const svg = createSvg(width, height);
+  const area = { left: 42, top: 14, width: width - 68, height: height - 48 };
+  const labels = data.monthSeries.map(m => monthLabelFromKey(m.month));
+  const series = [
+    {
+      name: "Deals Assigned",
+      color: "#f2b001",
+      values: data.monthSeries.map(m => m.velocity),
+      clickPayloadBuilder: idx => ({ month: data.monthSeries[idx].month })
+    }
+  ];
+  drawLineChart(svg, area, labels, series);
+  drawLegend(svg, [{ name: "Deals Assigned / Period", color: "#f2b001" }], area.left + 4, area.top + 8);
+  return { svg, footnote: "Velocity = number of deals assigned per selected period." };
+}
+
+function drawBarAxes(svg, area, maxY, categories) {
+  drawAxes(svg, area, maxY, 4, null);
+  categories.forEach((cat, idx) => {
+    const x = area.left + area.width * ((idx + 0.5) / categories.length);
+    const t = svgNode("text", { x, y: area.top + area.height + 12, "font-size": 8, "text-anchor": "middle", fill: "#888" });
+    t.textContent = cat;
+    svg.appendChild(t);
+  });
+}
+
+function renderRotationRemovalsChart(bodyEl, data) {
+  const width = Math.max(380, bodyEl.clientWidth - 12);
+  const height = Math.max(220, bodyEl.clientHeight - 34);
+  const svg = createSvg(width, height);
+  const area = { left: 42, top: 14, width: width - 68, height: height - 48 };
+  const categories = ["Capacity", "Velocity", "Other"];
+  const values = [data.totals.removals.capacity, data.totals.removals.velocity, data.totals.removals.other];
+  const maxY = Math.max(1, ...values) * 1.25;
+  drawBarAxes(svg, area, maxY, categories);
+
+  const barW = area.width / categories.length * 0.52;
+  values.forEach((v, idx) => {
+    const xCenter = area.left + area.width * ((idx + 0.5) / categories.length);
+    const h = (v / maxY) * area.height;
+    const x = xCenter - barW / 2;
+    const y = area.top + area.height - h;
+    const color = idx === 0 ? "#d9534f" : (idx === 1 ? "#f2b001" : "#7bbaf0");
+    const bar = svgNode("rect", { x, y, width: barW, height: h, fill: color, rx: 2, ry: 2 });
+    attachTooltipAndClick(bar, `${categories[idx]} removals\nCount: ${v}`, null);
+    svg.appendChild(bar);
+    const lbl = svgNode("text", { x: xCenter, y: y - 4, "font-size": 9, "text-anchor": "middle", fill: "#666" });
+    lbl.textContent = String(v);
+    svg.appendChild(lbl);
+  });
+  return { svg, footnote: "Filtered by date, territory, tier, and optional IM selection." };
+}
+
+function renderIndividualWorkChart(bodyEl, data) {
+  const width = Math.max(460, bodyEl.clientWidth - 12);
+  const height = Math.max(240, bodyEl.clientHeight - 34);
+  const svg = createSvg(width, height);
+  const area = { left: 56, top: 14, width: width - 88, height: height - 60 };
+
+  const tierOrder = { T1: 1, T2: 2, T3: 3, T4: 4 };
+  const rows = [...data.byIM].sort((a, b) => {
+    const ta = tierOrder[a.tier] || 9;
+    const tb = tierOrder[b.tier] || 9;
+    if (ta !== tb) return ta - tb;
+    return a.name.localeCompare(b.name);
+  }).slice(0, 18);
+
+  if (!rows.length) {
+    const txt = svgNode("text", { x: width / 2, y: height / 2, "text-anchor": "middle", "font-size": 11, fill: "#999" });
+    txt.textContent = "No IM data for current filters.";
+    svg.appendChild(txt);
+    return { svg, footnote: "Adjust territory/tier/IM filters to display data." };
+  }
+
+  const maxY = Math.max(1, ...rows.map(r => Math.max(r.dealPoints + r.projectPoints, r.capacity))) * 1.15;
+  drawBarAxes(svg, area, maxY, rows.map(() => ""));
+  const barW = area.width / rows.length * 0.62;
+
+  rows.forEach((r, idx) => {
+    const xCenter = area.left + area.width * ((idx + 0.5) / rows.length);
+    const x = xCenter - barW / 2;
+    const dealH = ((r.dealPoints || 0) / maxY) * area.height;
+    const projH = ((r.projectPoints || 0) / maxY) * area.height;
+    const totalH = dealH + projH;
+    const yBase = area.top + area.height;
+    const yDeal = yBase - dealH;
+    const yProj = yDeal - projH;
+    const capH = (r.capacity / maxY) * area.height;
+    const yCap = yBase - capH;
+
+    const capOutline = svgNode("rect", {
+      x: x - 1.5,
+      y: yCap,
+      width: barW + 3,
+      height: capH,
+      fill: "none",
+      stroke: "#444",
+      "stroke-width": 1.1,
+      "stroke-dasharray": "3 2"
+    });
+    attachTooltipAndClick(capOutline, `${r.name}\nMPC: ${Math.round(r.capacity)}`, { tier: r.tier });
+    svg.appendChild(capOutline);
+
+    const dealRect = svgNode("rect", { x, y: yDeal, width: barW, height: Math.max(1, dealH), fill: "#85ad33" });
+    const projRect = svgNode("rect", { x, y: yProj, width: barW, height: Math.max(0, projH), fill: "#7bbaf0" });
+    const tooltip = `${r.name} (${r.timezone}, ${r.tier})\nDeal: ${Math.round(r.dealPoints)} | Project: ${Math.round(r.projectPoints)}\nTotal: ${Math.round(r.points)} | MPC: ${Math.round(r.capacity)}`;
+    attachTooltipAndClick(dealRect, tooltip, { imName: r.name, tier: r.tier, territory: r.timezone });
+    attachTooltipAndClick(projRect, tooltip, { imName: r.name, tier: r.tier, territory: r.timezone });
+    svg.appendChild(dealRect);
+    svg.appendChild(projRect);
+
+    const label = svgNode("text", { x: xCenter, y: yBase + 11, "font-size": 7, "text-anchor": "middle", fill: "#666" });
+    label.textContent = `${r.name.split(" ")[0]} (${r.timezone},${r.tier})`;
+    svg.appendChild(label);
+  });
+
+  drawLegend(svg, [
+    { name: "Deal Points", color: "#85ad33" },
+    { name: "Project Points", color: "#7bbaf0" },
+    { name: "MPC Outline", color: "#444" }
+  ], area.left + 4, area.top + 8);
+  return { svg, footnote: "Sorted Tier order: T1 -> T2 -> T3 -> T4. Click a bar to drill to individual IM." };
+}
+
+function renderTerritoryCapacityChart(bodyEl, data) {
+  const width = Math.max(420, bodyEl.clientWidth - 12);
+  const height = Math.max(230, bodyEl.clientHeight - 34);
+  const svg = createSvg(width, height);
+  const area = { left: 42, top: 14, width: width - 68, height: height - 48 };
+  const territories = ["EST", "CST", "MST", "PST"];
+  const rows = territories.map(tz => ({ tz, ...data.byTerritory[tz] }));
+  const maxY = Math.max(1, ...rows.map(r => Math.max(r.dealPoints + r.projectPoints, r.capacity))) * 1.15;
+  drawBarAxes(svg, area, maxY, territories);
+  const barW = area.width / rows.length * 0.55;
+
+  rows.forEach((r, idx) => {
+    const xCenter = area.left + area.width * ((idx + 0.5) / rows.length);
+    const x = xCenter - barW / 2;
+    const dealH = (r.dealPoints / maxY) * area.height;
+    const projH = (r.projectPoints / maxY) * area.height;
+    const yBase = area.top + area.height;
+    const yDeal = yBase - dealH;
+    const yProj = yDeal - projH;
+    const capH = (r.capacity / maxY) * area.height;
+    const yCap = yBase - capH;
+
+    const capOutline = svgNode("rect", { x: x - 1.5, y: yCap, width: barW + 3, height: capH, fill: "none", stroke: "#444", "stroke-width": 1.1, "stroke-dasharray": "3 2" });
+    attachTooltipAndClick(capOutline, `${r.tz}\nCapacity: ${Math.round(r.capacity)}`, { territory: r.tz });
+    svg.appendChild(capOutline);
+
+    const dealRect = svgNode("rect", { x, y: yDeal, width: barW, height: Math.max(0, dealH), fill: "#85ad33" });
+    const projRect = svgNode("rect", { x, y: yProj, width: barW, height: Math.max(0, projH), fill: "#7bbaf0" });
+    const tooltip = `${r.tz}\nDeal: ${Math.round(r.dealPoints)} | Project: ${Math.round(r.projectPoints)}\nTotal: ${Math.round(r.points)} | Capacity: ${Math.round(r.capacity)}`;
+    attachTooltipAndClick(dealRect, tooltip, { territory: r.tz });
+    attachTooltipAndClick(projRect, tooltip, { territory: r.tz });
+    svg.appendChild(dealRect);
+    svg.appendChild(projRect);
+  });
+  drawLegend(svg, [{ name: "Deal", color: "#85ad33" }, { name: "Project", color: "#7bbaf0" }, { name: "Capacity", color: "#444" }], area.left + 4, area.top + 8);
+  return { svg, footnote: "Click a territory bar to cross-filter all charts." };
+}
+
+function renderPointTrendsChart(bodyEl, data, comparison) {
+  const width = Math.max(420, bodyEl.clientWidth - 12);
+  const height = Math.max(230, bodyEl.clientHeight - 34);
+  const svg = createSvg(width, height);
+  const area = { left: 42, top: 14, width: width - 86, height: height - 48 };
+  const labels = data.monthSeries.map(m => monthLabelFromKey(m.month));
+  const selectedLabel = reportingState.filters.dataMode === "deal" ? "Deal Points" : (reportingState.filters.dataMode === "project" ? "Project Points" : "Total Points");
+  const series = [
+    { name: `${selectedLabel} Assigned`, color: "#85ad33", values: data.monthSeries.map(m => m.points), clickPayloadBuilder: idx => ({ month: data.monthSeries[idx].month }) },
+    { name: "Total Capacity", color: "#7bbaf0", values: data.monthSeries.map(m => m.capacity) }
+  ];
+  if (comparison) {
+    series.push({ name: `Compare ${comparison.range.label}`, color: "#999", dashed: true, values: comparison.monthSeries.map(m => m.points) });
+  }
+  drawLineChart(svg, area, labels, series);
+  drawLegend(svg, series.map(s => ({ name: s.name, color: s.color, dashed: !!s.dashed })), area.left + 4, area.top + 8);
+  return { svg, footnote: "Respects Deal / Project / Both toggle selection." };
+}
+
+function computeProjectionRows(data) {
+  const series = data.monthSeries;
+  const recent = series.slice(-6);
+  const older = series.slice(-12, -6);
+  const avgRecentPoints = recent.length ? recent.reduce((a, b) => a + b.points, 0) / recent.length : 0;
+  const avgOlderPoints = older.length ? older.reduce((a, b) => a + b.points, 0) / older.length : avgRecentPoints;
+  const trendDelta = avgRecentPoints - avgOlderPoints;
+  const latest = series[series.length - 1] || { points: 0, capacity: 0 };
+  const headcount = Math.round((latest.capacity || 0) / 100);
+
+  const forecast = [];
+  let projectedPoints = latest.points;
+  const monthlyGrowth = trendDelta / Math.max(1, recent.length);
+  for (let i = 1; i <= 4; i++) {
+    projectedPoints += monthlyGrowth;
+    const utilization = latest.capacity > 0 ? (projectedPoints / latest.capacity) * 100 : 0;
+    const neededCapacity = utilization > 95 ? Math.ceil((projectedPoints / 0.9) - latest.capacity) : 0;
+    forecast.push({
+      period: `+${i} mo`,
+      projectedPoints: Math.round(projectedPoints),
+      capacity: Math.round(latest.capacity),
+      utilization: `${Math.round(utilization)}%`,
+      additionalNeeded: neededCapacity > 0 ? `${neededCapacity} pts` : "No gap"
+    });
+  }
+
+  return {
+    headcount,
+    latestPoints: Math.round(latest.points),
+    latestCapacity: Math.round(latest.capacity),
+    recentTrend: Math.round(trendDelta),
+    forecast
+  };
+}
+
+function renderProjectionModule(bodyEl, data, comparison) {
+  const projection = computeProjectionRows(data);
+  const compareCap = comparison ? Math.round(comparison.totals.capacity / Math.max(1, comparison.monthSeries.length)) : null;
+  const currCap = Math.round(data.totals.capacity / Math.max(1, data.monthSeries.length));
+  const capDelta = compareCap == null ? null : currCap - compareCap;
+
+  const wrap = document.createElement("div");
+  wrap.className = "projection-module";
+  wrap.innerHTML = `
+    <div class="projection-grid">
+      <div class="projection-block">
+        <div class="k">Max Possible Points (Current Headcount)</div>
+        <div class="v">${projection.latestCapacity}</div>
+      </div>
+      <div class="projection-block">
+        <div class="k">Current Assigned Points</div>
+        <div class="v">${projection.latestPoints}</div>
+      </div>
+      <div class="projection-block">
+        <div class="k">Trend Delta (Recent vs Prior)</div>
+        <div class="v">${projection.recentTrend >= 0 ? "+" : ""}${projection.recentTrend}</div>
+      </div>
+      <div class="projection-block">
+        <div class="k">Capacity vs Prior Fiscal Set</div>
+        <div class="v">${capDelta == null ? "N/A" : `${capDelta >= 0 ? "+" : ""}${capDelta}`}</div>
+      </div>
+    </div>
+    <table class="projection-table">
+      <thead>
+        <tr>
+          <th>Forecast</th>
+          <th>Projected Points</th>
+          <th>Capacity</th>
+          <th>Utilization</th>
+          <th>Headcount Need Signal</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${projection.forecast.map(row => `<tr><td>${row.period}</td><td>${row.projectedPoints}</td><td>${row.capacity}</td><td>${row.utilization}</td><td>${row.additionalNeeded}</td></tr>`).join("")}
+      </tbody>
+    </table>
+  `;
+  return { customNode: wrap, footnote: "Projection compares current trend to prior fiscal period and flags likely headcount pressure." };
+}
+
+function buildChartOutput(chartId, bodyEl, data, comparison) {
+  if (chartId === "team-capacity-load") return renderTeamCapacityChart(bodyEl, data, comparison);
+  if (chartId === "risk-load-trend") return renderRiskLoadChart(bodyEl, data);
+  if (chartId === "velocity-trend") return renderVelocityChart(bodyEl, data);
+  if (chartId === "rotation-removals") return renderRotationRemovalsChart(bodyEl, data);
+  if (chartId === "individual-work") return renderIndividualWorkChart(bodyEl, data);
+  if (chartId === "territory-capacity") return renderTerritoryCapacityChart(bodyEl, data);
+  if (chartId === "point-trends") return renderPointTrendsChart(bodyEl, data, comparison);
+  if (chartId === "capacity-projection") return renderProjectionModule(bodyEl, data, comparison);
+  return null;
+}
+
+function getVisibleCharts() {
+  return reportingState.layout.filter(c => !c.hidden);
+}
+
+function getHiddenCharts() {
+  return reportingState.layout.filter(c => c.hidden);
+}
+
+function renderChartLibrary() {
+  const library = document.getElementById("rep-chart-library");
+  const hidden = getHiddenCharts();
+  if (!hidden.length) {
+    library.innerHTML = `<span style="font-size:10px; color:#888;">No removed charts.</span>`;
+    return;
+  }
+  library.innerHTML = hidden.map(item => `<div class="chip">${item.title}<button data-add-chart="${item.id}">Add</button></div>`).join("");
+  library.querySelectorAll("button[data-add-chart]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-add-chart");
+      setReportingState(state => {
+        const target = state.layout.find(c => c.id === id);
+        if (target) target.hidden = false;
+      });
+    });
+  });
+}
+
+function reorderChart(layout, fromId, toId) {
+  const fromIdx = layout.findIndex(c => c.id === fromId);
+  const toIdx = layout.findIndex(c => c.id === toId);
+  if (fromIdx < 0 || toIdx < 0 || fromIdx === toIdx) return layout;
+  const next = [...layout];
+  const [moved] = next.splice(fromIdx, 1);
+  next.splice(toIdx, 0, moved);
+  return next;
+}
+
+function attachDragHandlers(card, chartId) {
+  card.draggable = true;
+  card.addEventListener("dragstart", () => {
+    reportingDraggingChartId = chartId;
+    card.classList.add("dragging");
+  });
+  card.addEventListener("dragend", () => {
+    card.classList.remove("dragging");
+    reportingDraggingChartId = null;
+  });
+  card.addEventListener("dragover", e => e.preventDefault());
+  card.addEventListener("drop", e => {
+    e.preventDefault();
+    if (!reportingDraggingChartId || reportingDraggingChartId === chartId) return;
+    setReportingState(state => {
+      state.layout = reorderChart(state.layout, reportingDraggingChartId, chartId);
+    });
+  });
+}
+
+function attachResizeObserver(card, chartId) {
+  const obs = new ResizeObserver(entries => {
+    const rect = entries[0].contentRect;
+    setReportingState(state => {
+      const target = state.layout.find(c => c.id === chartId);
+      if (!target) return;
+      target.width = Math.round(clampNumber(rect.width, 360, 1200));
+      target.height = Math.round(clampNumber(rect.height, 280, 900));
+    }, false);
+    saveReportingState();
+  });
+  obs.observe(card);
+  reportingObservers.push(obs);
+}
+
+function clearReportingObservers() {
+  reportingObservers.forEach(obs => obs.disconnect());
+  reportingObservers = [];
+}
+
+function renderReportingDashboard(forceRerender = false) {
+  if (!isReportingVisible() && !forceRerender) return;
+  clearReportingObservers();
+
+  const filters = reportingState.filters;
+  const data = buildAggregatedData(filters, false);
+  const comparison = getComparisonData(filters);
+  const dashboard = document.getElementById("rep-dashboard");
+  dashboard.innerHTML = "";
+
+  const dataNote = document.getElementById("rep-data-note");
+  const hasIncomplete = data.totals.hasIncomplete;
+  if (hasIncomplete) {
+    dataNote.style.display = "inline-block";
+    dataNote.innerText = "Historical limitation: periods before Oct 2025 include deals only. Project trends are marked with incomplete history.";
+  } else {
+    dataNote.style.display = "none";
+  }
+
+  const drillBits = ["Team"];
+  if (filters.territory !== "ALL") drillBits.push(`Territory:${filters.territory}`);
+  if (filters.tier !== "ALL") drillBits.push(`Tier:${filters.tier}`);
+  if (filters.ims.length) drillBits.push(`IM:${filters.ims.join(", ")}`);
+  if (reportingState.drill.month) drillBits.push(`Period:${monthLabelFromKey(reportingState.drill.month)}`);
+  document.getElementById("rep-drill-path").innerText = `Drill Path: ${drillBits.join(" -> ")}`;
+
+  const visibleCharts = getVisibleCharts();
+  visibleCharts.forEach(chart => {
+    const card = document.createElement("div");
+    card.className = "report-card";
+    card.style.width = `${chart.width || 520}px`;
+    card.style.height = `${chart.height || 330}px`;
+    card.setAttribute("data-chart-id", chart.id);
+
+    const head = document.createElement("div");
+    head.className = "report-card-head";
+    head.innerHTML = `<div class="report-title-wrap"><span class="drag-handle">::</span><h4>${chart.title}</h4></div>
+      <div class="report-card-actions"><button class="report-mini-btn" data-remove-chart="${chart.id}">Remove</button></div>`;
+    card.appendChild(head);
+
+    const body = document.createElement("div");
+    body.className = "report-card-body";
+    card.appendChild(body);
+    dashboard.appendChild(card);
+
+    const output = buildChartOutput(chart.id, body, data, comparison);
+    if (output) {
+      if (output.svg) body.appendChild(output.svg);
+      if (output.customNode) body.appendChild(output.customNode);
+      if (output.footnote) {
+        const foot = document.createElement("div");
+        foot.className = "chart-footnote";
+        foot.innerText = output.footnote;
+        body.appendChild(foot);
+      }
+    }
+
+    const removeBtn = head.querySelector(`[data-remove-chart="${chart.id}"]`);
+    removeBtn.addEventListener("click", () => {
+      setReportingState(state => {
+        const target = state.layout.find(c => c.id === chart.id);
+        if (target) target.hidden = true;
+      });
+    });
+
+    attachDragHandlers(card, chart.id);
+    attachResizeObserver(card, chart.id);
+  });
+
+  renderChartLibrary();
+}
+
+initReporting();
+updateMetrics();
+renderContent();
+updateBadge();
+
 </script>
+
 </body>
+
 </html>
